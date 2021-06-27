@@ -37,6 +37,10 @@ class rqlite:
         url = 'http://'+self.ip+':'+str(self.port)+'/status?pretty'
         return self.curl(url,[])
 
+    def nodes(self):
+        url = 'http://'+self.ip+':'+str(self.port)+'/nodes?pretty'
+        return self.curl(url,[])
+
     def init(self):
         self.execute(["CREATE TABLE nodes (name TEXT NOT NULL PRIMARY KEY, memory INTEGER NOT NULL, updated memory INTEGER NOT NULL)"])
         self.execute(["CREATE TABLE machines (name TEXT NOT NULL PRIMARY KEY, node TEXT NULL, os TEXT NOT NULL, memory INTEGER NOT NULL, deploy TEXT NULL, FOREIGN KEY(node) REFERENCES nodes(name) ON DELETE CASCADE)"])
