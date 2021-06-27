@@ -32,3 +32,11 @@ python3 wood.py lxd
 ```
 python3 wood.py rqlite
 ```
+3. Deploy woodKubernetes
+```
+python3 wood.py wood
+```
+4. SSH into any machine and Initialize the Database
+```
+su woodKubernetes -c "cd /home/woodKubernetes/woodKubernetes/ && python3 cli.py init"
+```

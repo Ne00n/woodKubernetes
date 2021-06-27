@@ -14,3 +14,5 @@ elif sys.argv[1] == "lxd":
     wood.lxd()
 elif sys.argv[1] == "rqlite":
     wood.rqlite()
+elif sys.argv[1] == "wood":
+    wood.wood()

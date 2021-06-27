@@ -28,3 +28,8 @@ class Wood:
             rqliteConfig = self.templator.rqlite(server['name'],server['vpn'],self.servers[0]['vpn'])
             self.cmd(server['ip'],'useradd rqlite -m -d /home/rqlite/ -s /bin/bash && su rqlite -c "cd; wget https://github.com/rqlite/rqlite/releases/download/v6.0.0/rqlite-v6.0.0-linux-amd64.tar.gz && tar xvf rqlite-v6.0.0-linux-amd64.tar.gz && mv rqlite-v6.0.0-linux-amd64 rqlite"',False)
             self.cmd(server['ip'],'echo "'+rqliteConfig+'" > /etc/systemd/system/rqlite.service && systemctl enable rqlite && systemctl start rqlite',False)
+
+    def wood(self):
+        for server in self.servers:
+            print(server['name'],"Installing woodKubernetes")
+            self.cmd(server['ip'],'apt-get install git -y && useradd woodKubernetes -m -d /home/woodKubernetes/ -s /bin/bash && su woodKubernetes -c "cd; git clone https://github.com/Ne00n/woodKubernetes.git"',False)
