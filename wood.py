@@ -12,3 +12,5 @@ if len(sys.argv) == 1:
     print("lxd")
 elif sys.argv[1] == "lxd":
     wood.lxd()
+elif sys.argv[1] == "rqlite":
+    wood.rqlite()

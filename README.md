@@ -24,11 +24,11 @@
 Rename servers.example.json to servers.json and fill it up<br />
 
 ## Setup<br />
-1. Deploy LXD on all Nodes
+1. Deploy LXD on all Nodes and init
 ```
 python3 wood.py lxd
 ```
-2. Configure LXD on all nodes
+2. Deploy rqlite on all Nodes
 ```
-lxd init
+python3 wood.py rqlite
 ```
