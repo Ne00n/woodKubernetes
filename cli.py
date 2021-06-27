@@ -3,7 +3,6 @@ from Class.cli import CLI
 import sys
 
 cli = CLI()
-cert = Cert()
 
 if len(sys.argv) == 1:
     print("init")
