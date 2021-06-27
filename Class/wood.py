@@ -4,6 +4,7 @@ import subprocess, time, json, re
 servers = {}
 
 class Wood:
+
     def __init__(self,config="servers.json"):
         self.templator = Templator()
         print("Loading",config)
@@ -33,4 +34,4 @@ class Wood:
     def wood(self):
         for server in self.servers:
             print(server['name'],"Installing woodKubernetes")
-            self.cmd(server['ip'],'apt-get install git -y && useradd woodKubernetes -m -d /home/woodKubernetes/ -s /bin/bash && su woodKubernetes -c "cd; git clone https://github.com/Ne00n/woodKubernetes.git"',False)
+            self.cmd(server['ip'],'apt-get install git python3-pip -y && pip3 install psutil && useradd woodKubernetes -m -d /home/woodKubernetes/ -s /bin/bash && adduser woodKubernetes lxd && su woodKubernetes -c "cd; git clone https://github.com/Ne00n/woodKubernetes.git"',False)
