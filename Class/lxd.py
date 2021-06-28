@@ -13,7 +13,9 @@ class LXD(rqlite):
         memory = int(psutil.virtual_memory().total / 1e+6)
         while True:
             node = self.query(['SELECT * FROM nodes WHERE name = "'+hostname+'"'])
-            if node is False: time.sleep(30)
+            if node is False:
+                time.sleep(30)
+                continue
 
             if not 'values' in node['results'][0]:
                 result = self.execute(['INSERT INTO nodes(name,memory,updated) VALUES(?, ?, ?)',hostname,memory,int(time.time())])
