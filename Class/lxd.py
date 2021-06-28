@@ -34,7 +34,8 @@ class LXD(rqlite):
             machines = self.query(['SELECT * FROM machines'])
             if machines is False or not 'values' in machines['results'][0]:
                 print("No machines found")
-                if machines is not False: for container in containers: self.terminate(container)
+                if machines is not False:
+                    for container in containers: self.terminate(container)
                 time.sleep(30)
                 continue
 
