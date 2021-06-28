@@ -10,8 +10,8 @@
 - LXD Cluster needs CephFS storage backend + won't work well on higher latency
 
 **Software**<br />
-- LXD for running the containers
-- rqlite to store containers info/leader choice
+- [LXD](https://github.com/lxc/lxd) for running the containers
+- [rqlite](https://github.com/rqlite/rqlite) to store containers info/leader choice
 
 **Features**<br />
 - High Availability
@@ -19,7 +19,7 @@
 **Requirements**
 - 3+ Nodes with Ubuntu 20.04 or Debian 10
 - Each node should have at least 1GB of Memory
-- Mesh VPN connecting them together (Tinc/Wireguard)
+- Mesh VPN connecting them together ([Tinc](https://www.tinc-vpn.org/)/Wireguard)
 
 **Prepare**<br />
 Rename servers.example.json to servers.json and fill it up<br />
