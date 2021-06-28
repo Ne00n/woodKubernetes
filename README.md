@@ -19,7 +19,7 @@
 **Requirements**
 - 3+ Nodes with Ubuntu 20.04 or Debian 10
 - Each node should have at least 1GB of Memory
-- Mesh VPN connecting them together ([Tinc](https://www.tinc-vpn.org/)/Wireguard)
+- Mesh VPN connecting them together ([Tinc](https://www.tinc-vpn.org/)/[VpnCloud](https://github.com/dswd/vpncloud)/[Wireguard](https://www.wireguard.com/))
 
 **Prepare**<br />
 Rename servers.example.json to servers.json and fill it up<br />
