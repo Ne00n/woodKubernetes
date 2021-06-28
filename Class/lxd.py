@@ -23,23 +23,31 @@ class LXD(rqlite):
 
         while True:
             nodes = self.nodes()
-            if hostname+":4002" not in nodes:
+            if hostname not in nodes:
                 print("Warning, could not find",hostname,"in rqlite nodes")
                 time.sleep(60)
                 continue
 
-            current = nodes[hostname+":4002"]
-            if current['leader'] is True:
-                print("leader")
-
             machines = self.query(['SELECT * FROM machines'])
             if machines is False or not 'values' in machines['results'][0]:
+                print("No machines found")
                 time.sleep(60)
                 continue
 
             machineList,containerList = {},[]
             for machine in machines['results'][0]['values']:
                 machineList[machine[0]] = machine[1]
+
+            current = nodes[hostname]
+            if current['leader'] is True:
+                for machine,node in machineList.items():
+                    #check if anything is not allocated
+                    if node is None:
+                        self.switchMachine(nodes,machine)
+                        continue
+                    #checking if anything wen't down
+                    if node in nodes and nodes[node]['reachable'] is not True:
+                        self.switchMachine(nodes,machine)
 
             containersRaw = subprocess.check_output(['lxc', 'list', '--format=json']).decode("utf-8")
             containers = json.loads(containersRaw)
@@ -69,3 +77,10 @@ class LXD(rqlite):
         if machine['state']['status'] == "Running":
             subprocess.call(['lxc', 'stop',machine['name']])
         subprocess.call(['lxc', 'delete',machine['name']])
+
+    def switchMachine(self,nodes,machine):
+        print("Switching",machine)
+        for node,data in nodes.items():
+            if data['reachable'] is True:
+                print("Switching",machine,"to",node)
+                self.execute(['UPDATE machines SET node = ?',node])
