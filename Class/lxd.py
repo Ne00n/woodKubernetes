@@ -25,13 +25,13 @@ class LXD(rqlite):
             nodes = self.nodes()
             if hostname not in nodes:
                 print("Warning, could not find",hostname,"in rqlite nodes")
-                time.sleep(60)
+                time.sleep(30)
                 continue
 
             machines = self.query(['SELECT * FROM machines'])
             if machines is False or not 'values' in machines['results'][0]:
                 print("No machines found")
-                time.sleep(60)
+                time.sleep(30)
                 continue
 
             machineList,containerList = {},[]
@@ -63,7 +63,7 @@ class LXD(rqlite):
             for machine in machines['results'][0]['values']:
                 if machine[1] == hostname and machine[0] not in containerList:
                     self.deploy(machine)
-            time.sleep(300)
+            time.sleep(30)
 
     def deploy(self,machine):
         print("Deploying",machine[0])
