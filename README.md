@@ -6,8 +6,8 @@
 - High Availability of LXD containers without LXD cluster and/or CephFS
 
 **Why**
-- I Dislike Kubernetes, I like Docker, sadly Docker has dogshit IPv6 support
-- LXD Cluster needs CephFS storage backend
+- I dislike Kubernetes, I like Docker, sadly Docker has shit IPv6 support
+- LXD Cluster needs CephFS storage backend + won't work well on higher latency
 
 **Software**<br />
 - LXD for running the containers
