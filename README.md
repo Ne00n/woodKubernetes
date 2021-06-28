@@ -50,7 +50,7 @@ python3 wood.py service
 ```
 6. Deploy the first container
 ```
-python3 cli.py machine add one images:debian/buster 256 "wget -qO - https://gist.githubusercontent.com/Ne00n/c33cd89a69c039f0279930c70d46433b/raw/ec64796e6bd4bb489932e6db97782477c3e36ffb/test | bash"
+python3 cli.py machine add one images:debian/buster 256 \ "wget -qO - https://gist.githubusercontent.com/Ne00n/c33cd89a69c039f0279930c70d46433b/raw/ec64796e6bd4bb489932e6db97782477c3e36ffb/test | bash"
 ```
 
 **Update**
