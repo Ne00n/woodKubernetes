@@ -32,6 +32,10 @@ python3 wood.py lxd
 ```
 python3 wood.py rqlite
 ```
+Check cluster status:
+```
+curl rqlite:4003/nodes?pretty
+```
 3. Deploy woodKubernetes
 ```
 python3 wood.py wood
@@ -39,4 +43,13 @@ python3 wood.py wood
 4. SSH into any machine and Initialize the Database
 ```
 su woodKubernetes -c "cd /home/woodKubernetes/woodKubernetes/ && python3 cli.py init"
+```
+5. Deploy the primary service
+```
+python3 wood.py service
+```
+
+**Update**
+```
+python3 wood.py update
 ```

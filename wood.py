@@ -16,3 +16,7 @@ elif sys.argv[1] == "rqlite":
     wood.rqlite()
 elif sys.argv[1] == "wood":
     wood.wood()
+elif sys.argv[1] == "service":
+    wood.service()
+elif sys.argv[1] == "update":
+    wood.update()

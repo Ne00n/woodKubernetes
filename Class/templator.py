@@ -1,4 +1,5 @@
 class Templator:
+
     def rqlite(self,node,vpn,firstNode):
         template = '''[Unit]
 Description=rqlite service
@@ -17,4 +18,22 @@ ExecStart=/home/rqlite/rqlite/rqlited -node-id '''+node+''' -http-addr '''+vpn+'
 
 [Install]
 WantedBy=multi-user.target'''
+        return template
+
+    def woodKubernetes(self):
+        template = '''[Unit]
+Description=woodKubernetes service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=woodKubernetes
+Group=woodKubernetes
+Type=simple
+WorkingDirectory=/home/woodKubernetes/woodKubernetes/cron/
+ExecStart=/usr/bin/python3 wood.py lxd
+
+[Install]
+WantedBy=multi-user.target
+        '''
         return template
