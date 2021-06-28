@@ -18,6 +18,7 @@
 
 **Requirements**
 - 3+ Nodes with Ubuntu 20.04 or Debian 10
+- Each node should have at least 1GB of Memory
 - Mesh VPN connecting them together (Tinc/Wireguard)
 
 **Prepare**<br />
