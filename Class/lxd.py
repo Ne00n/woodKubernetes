@@ -28,9 +28,13 @@ class LXD(rqlite):
                 time.sleep(30)
                 continue
 
+            containersRaw = subprocess.check_output(['lxc', 'list', '--format=json']).decode("utf-8")
+            containers = json.loads(containersRaw)
+
             machines = self.query(['SELECT * FROM machines'])
             if machines is False or not 'values' in machines['results'][0]:
                 print("No machines found")
+                if machines is not False: for container in containers: self.terminate(container)
                 time.sleep(30)
                 continue
 
@@ -49,8 +53,6 @@ class LXD(rqlite):
                     if node in nodes and nodes[node]['reachable'] is not True:
                         self.switchMachine(nodes,machine)
 
-            containersRaw = subprocess.check_output(['lxc', 'list', '--format=json']).decode("utf-8")
-            containers = json.loads(containersRaw)
             #check existing containers
             for container in containers:
                 containerList.append(container['name'])
