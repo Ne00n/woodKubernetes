@@ -1,5 +1,5 @@
 from Class.templator import Templator
-import subprocess, time, json, re
+import subprocess, random, time, json, re
 
 servers = {}
 
@@ -15,7 +15,7 @@ class Wood:
         cmd = ['ssh','root@'+server,command]
         for run in range(4):
             try:
-                p = subprocess.run(cmd, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=60)
+                p = subprocess.run(cmd, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=300)
                 if p.returncode != 0:
                     print("Warning got returncode",p.returncode,"on",server)
                     print("Error:",p.stderr.decode('utf-8'))
@@ -26,34 +26,34 @@ class Wood:
             time.sleep(random.randint(5, 15))
 
     def lxd(self):
-        for name,details in items(self.servers['servers']):
+        for name,details in self.servers['servers'].items():
             print(name,"Installing LXD")
-            self.cmd(details['ip'],'apt-get update && apt-get install snap snapd -y && snap install core && snap install lxd --channel=4.0/stable && /snap/bin/lxd init --auto',False)
+            self.cmd(details['ip'],'apt-get update && apt-get install snap snapd -y && snap install core && snap install lxd --channel=4.0/stable && /snap/bin/lxd init --auto')
 
     def rqlite(self):
-        for name,details in items(self.servers['servers']):
+        for name,details in self.servers['servers'].items():
             print(name,"Installing rqlite")
             rqliteConfig = self.templator.rqlite(name,server['vpn'],self.servers[0]['vpn'])
-            self.cmd(details['ip'],'useradd rqlite -m -d /home/rqlite/ -s /bin/bash && su rqlite -c "cd; wget https://github.com/rqlite/rqlite/releases/download/'+str(rqlite)+'/rqlite-'+str(rqlite)+'-linux-amd64.tar.gz && tar xvf rqlite-'+str(rqlite)+'-linux-amd64.tar.gz && mv rqlite-'+str(rqlite)+'-linux-amd64 rqlite"',False)
-            self.cmd(details['ip'],'echo "'+rqliteConfig+'" > /etc/systemd/system/rqlite.service && systemctl enable rqlite && systemctl start rqlite',False)
-            self.cmd(details['ip'],'echo "'+server['vpn']+' rqlite" >> /etc/hosts',False)
+            self.cmd(details['ip'],'useradd rqlite -m -d /home/rqlite/ -s /bin/bash && su rqlite -c "cd; wget https://github.com/rqlite/rqlite/releases/download/'+str(rqlite)+'/rqlite-'+str(rqlite)+'-linux-amd64.tar.gz && tar xvf rqlite-'+str(rqlite)+'-linux-amd64.tar.gz && mv rqlite-'+str(rqlite)+'-linux-amd64 rqlite"')
+            self.cmd(details['ip'],'echo "'+rqliteConfig+'" > /etc/systemd/system/rqlite.service && systemctl enable rqlite && systemctl start rqlite')
+            self.cmd(details['ip'],'echo "'+server['vpn']+' rqlite" >> /etc/hosts')
 
     def wood(self):
-        for name,details in items(self.servers['servers']):
+        for name,details in self.servers['servers'].items():
             print(name,"Installing woodKubernetes")
-            self.cmd(details['ip'],'apt-get install git python3-pip -y && pip3 install psutil && useradd woodKubernetes -m -d /home/woodKubernetes/ -s /bin/bash && groupadd lxd && sudo usermod -a -G lxd woodKubernetes && su woodKubernetes -c "cd; git clone https://github.com/Ne00n/woodKubernetes.git"',False)
+            self.cmd(details['ip'],'apt-get install git python3-pip -y && pip3 install psutil && useradd woodKubernetes -m -d /home/woodKubernetes/ -s /bin/bash && groupadd lxd && sudo usermod -a -G lxd woodKubernetes && su woodKubernetes -c "cd; git clone https://github.com/Ne00n/woodKubernetes.git"')
 
     def service(self):
-        for name,details in items(self.servers['servers']):
+        for name,details in self.servers['servers'].items():
             print(name,"Installing service")
             woodConfig = self.templator.woodKubernetes()
-            self.cmd(details['ip'],'echo "'+woodConfig+'" > /etc/systemd/system/woodKubernetes.service && systemctl enable woodKubernetes && systemctl start woodKubernetes',False)
+            self.cmd(details['ip'],'echo "'+woodConfig+'" > /etc/systemd/system/woodKubernetes.service && systemctl enable woodKubernetes && systemctl start woodKubernetes')
 
     def update(self):
-        for name,details in items(self.servers['servers']):
+        for name,details in self.servers['servers'].items():
             print(name,"Stopping woodKubernetes service")
-            self.cmd(details['ip'],'systemctl stop woodKubernetes',False)
+            self.cmd(details['ip'],'systemctl stop woodKubernetes')
             print(name,"Updating local git repo")
-            self.cmd(details['ip'],'su woodKubernetes -c "cd /home/woodKubernetes/woodKubernetes/ && git pull"',False)
+            self.cmd(details['ip'],'su woodKubernetes -c "cd /home/woodKubernetes/woodKubernetes/ && git pull"')
             print(name,"Starting woodKubernetes service")
-            self.cmd(details['ip'],'systemctl start woodKubernetes',False)
+            self.cmd(details['ip'],'systemctl start woodKubernetes')
