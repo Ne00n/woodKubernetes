@@ -32,12 +32,13 @@ class Wood:
             self.cmd(details['ip'],'apt-get update && apt-get install snap snapd -y && snap install core && snap install lxd --channel=4.0/stable && /snap/bin/lxd init --auto  --storage-backend=btrfs --storage-create-loop='+str(size))
 
     def rqlite(self):
+        first = next(iter(self.servers['servers'].keys()))
         for name,details in self.servers['servers'].items():
             print(name,"Installing rqlite")
-            rqliteConfig = self.templator.rqlite(name,server['vpn'],self.servers[0]['vpn'])
-            self.cmd(details['ip'],'useradd rqlite -m -d /home/rqlite/ -s /bin/bash && su rqlite -c "cd; wget https://github.com/rqlite/rqlite/releases/download/'+str(rqlite)+'/rqlite-'+str(rqlite)+'-linux-amd64.tar.gz && tar xvf rqlite-'+str(rqlite)+'-linux-amd64.tar.gz && mv rqlite-'+str(rqlite)+'-linux-amd64 rqlite"')
+            rqliteConfig = self.templator.rqlite(name,details['vpn'],self.servers['servers'][first]['vpn'])
+            self.cmd(details['ip'],'useradd rqlite -m -d /home/rqlite/ -s /bin/bash && su rqlite -c "cd; wget https://github.com/rqlite/rqlite/releases/download/v'+str(self.servers['rqlite'])+'/rqlite-v'+str(self.servers['rqlite'])+'-linux-amd64.tar.gz && tar xvf rqlite-v'+str(self.servers['rqlite'])+'-linux-amd64.tar.gz && mv rqlite-v'+str(self.servers['rqlite'])+'-linux-amd64 rqlite"')
             self.cmd(details['ip'],'echo "'+rqliteConfig+'" > /etc/systemd/system/rqlite.service && systemctl enable rqlite && systemctl start rqlite')
-            self.cmd(details['ip'],'echo "'+server['vpn']+' rqlite" >> /etc/hosts')
+            self.cmd(details['ip'],'echo "'+details['vpn']+' rqlite" >> /etc/hosts')
 
     def wood(self):
         for name,details in self.servers['servers'].items():
