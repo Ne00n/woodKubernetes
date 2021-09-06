@@ -58,3 +58,9 @@ class Wood:
             self.cmd(details['ip'],'su woodKubernetes -c "cd /home/woodKubernetes/woodKubernetes/ && git pull"')
             print(name,"Starting woodKubernetes service")
             self.cmd(details['ip'],'systemctl start woodKubernetes')
+
+    def preload(self):
+        template = input("What image should be preloaded? e.g debian/buster/amd64: ")
+        for name,details in self.servers['servers'].items():
+            print(name,"preloading",template)
+            self.cmd(details['ip'],'/snap/bin/lxc image copy images:'+template+' local: --copy-aliases --auto-update')
