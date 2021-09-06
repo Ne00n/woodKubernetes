@@ -51,7 +51,8 @@ su woodKubernetes -c "cd /home/woodKubernetes/woodKubernetes/ && python3 cli.py 
 ```
 python3 wood.py service
 ```
-6. Deploy the first container<br /><br />
+6. Deploy the first container<br />
+
 nginx example
 ```
 python3 cli.py machine add one debian/buster 256 \
