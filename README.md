@@ -26,7 +26,7 @@ Rename servers.example.json to servers.json and fill it up<br />
 
 ## Setup<br />
 1. Deploy LXD on all Nodes and init<br />
-By default a loop file is used with btrfs
+By default a loop file is used with lvm
 ```
 python3 wood.py lxd
 ```
