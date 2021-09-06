@@ -29,7 +29,7 @@ class Wood:
         size = input("How big should the btrfs storage pool be? (GB): ")
         for name,details in self.servers['servers'].items():
             print(name,"Installing LXD")
-            self.cmd(details['ip'],'apt-get update && apt-get install snap snapd -y && snap install core && snap install lxd --channel=4.0/stable && /snap/bin/lxd init --auto  --storage-backend=btrfs --storage-create-loop='+str(size))
+            self.cmd(details['ip'],'apt-get update && apt-get install snap snapd -y && snap install core && snap install lxd --channel=4.0/stable && /snap/bin/lxd init --auto  --storage-backend=lvm --storage-create-loop='+str(size))
 
     def rqlite(self):
         first = next(iter(self.servers['servers'].keys()))
