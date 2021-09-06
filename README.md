@@ -25,11 +25,13 @@
 Rename servers.example.json to servers.json and fill it up<br />
 
 ## Setup<br />
-1. Deploy LXD on all Nodes and init
+1. Deploy LXD on all Nodes and init<br />
+By default a loop file is used with btrfs
 ```
 python3 wood.py lxd
 ```
-2. Deploy rqlite on all Nodes
+2. Deploy rqlite on all Nodes<br />
+Check if version is up to date
 ```
 python3 wood.py rqlite
 ```
