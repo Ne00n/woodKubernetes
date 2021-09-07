@@ -81,7 +81,7 @@ class LXD(rqlite):
         for port in ports:
             if port == 0: break
             parts = port.split(":")
-            subprocess.call(['lxc','config','device','add',machine[0],'port'+str(parts[0]),'proxy','listen=tcp:0.0.0.0:'+str(parts[0]),'connect=tcp:127.0.0.1:'+str(parts[1])]
+            subprocess.call(['lxc','config','device','add',machine[0],'port'+str(parts[0]),'proxy','listen=tcp:0.0.0.0:'+str(parts[0]),'connect=tcp:127.0.0.1:'+str(parts[1])])
 
     def terminate(self,machine):
         print("Deleting",machine['name'])
