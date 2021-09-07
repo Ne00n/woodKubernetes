@@ -6,7 +6,7 @@
 - High Availability of LXD containers without LXD cluster and/or CephFS
 
 **Why**
-- I dislike Kubernetes, I like Docker, sadly Docker has shit IPv6 support
+- Kubernetes is way to complex for my use case
 - LXD Cluster needs CephFS storage backend + won't work well on higher latency
 
 **Software**<br />
@@ -53,6 +53,9 @@ su woodKubernetes -c "cd /home/woodKubernetes/woodKubernetes/ && python3 cli.py 
 python3 wood.py service
 ```
 6. Deploy the first container<br />
+
+Before you deploy, you should preload the os images you need.<br />
+This results in faster deploy times and don't affect you if the image server is down or slow.<br />
 
 nginx example
 ```
