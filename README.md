@@ -15,6 +15,7 @@
 
 **Features**<br />
 - High Availability
+- Port Forwarding
 
 **Requirements**
 - 3+ Nodes with Ubuntu 20.04 or Debian 10
@@ -31,11 +32,11 @@ By default a loop file is used with lvm
 python3 wood.py lxd
 ```
 2. Deploy rqlite on all Nodes<br />
-Check if version is up to date
+Check if the version is up to date
 ```
 python3 wood.py rqlite
 ```
-Check cluster status:
+Check the rqlite cluster status:
 ```
 curl rqlite:4003/nodes?pretty
 ```
