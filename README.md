@@ -6,7 +6,7 @@
 - High Availability of LXD containers without LXD cluster and/or CephFS
 
 **Why**
-- I dislike Kubernetes, I like Docker, sadly Docker has shit IPv6 support
+- Kubernetes is way to complex for my use case
 - LXD Cluster needs CephFS storage backend + won't work well on higher latency
 
 **Software**<br />
@@ -15,6 +15,7 @@
 
 **Features**<br />
 - High Availability
+- Port Forwarding
 
 **Requirements**
 - 3+ Nodes with Ubuntu 20.04 or Debian 10
@@ -31,11 +32,11 @@ By default a loop file is used with lvm
 python3 wood.py lxd
 ```
 2. Deploy rqlite on all Nodes<br />
-Check if version is up to date
+Check if the version is up to date
 ```
 python3 wood.py rqlite
 ```
-Check cluster status:
+Check the rqlite cluster status:
 ```
 curl rqlite:4003/nodes?pretty
 ```
@@ -51,10 +52,22 @@ su woodKubernetes -c "cd /home/woodKubernetes/woodKubernetes/ && python3 cli.py 
 ```
 python3 wood.py service
 ```
-6. Deploy the first container
+6. Deploy the first container<br />
+
+Before you deploy, you should preload the os images you need.<br />
+This results in faster deploy times and don't affect you if the image server is down or slow.<br />
+
+nginx example
 ```
-python3 cli.py machine add one images:debian/buster 256 "wget -qO - https://gist.githubusercontent.com/Ne00n/c33cd89a69c039f0279930c70d46433b/raw/ec64796e6bd4bb489932e6db97782477c3e36ffb/test | bash"
+python3 cli.py machine add one debian/buster 256 80:80,443:443 \
+"apt-get install nginx -y"
 ```
+znc example
+```
+python3 cli.py machine add one debian/buster 256 1025:1025 \
+"apt-get install wget znc -y && wget -qO - https://gist.githubusercontent.com/Ne00n/1fa5851bb86927e68ac82015da5a6744/raw/3232ac5c2350fdf5e2e17996752d68aa9142fa7f/znc%2520test%2520deploy | bash"
+```
+If you want no port forwarding use 0 instead
 
 **preload**<br />
 preload os templates

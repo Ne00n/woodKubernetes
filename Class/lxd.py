@@ -10,7 +10,7 @@ class LXD(rqlite):
         else:
             sub = hostname
 
-        memory = int(psutil.virtual_memory().total / 1e+6)
+        hostMemory = int(psutil.virtual_memory().total / 1e+6)
         while True:
             node = self.query(['SELECT * FROM nodes WHERE name = "'+hostname+'"'])
             if node is False:
@@ -18,9 +18,9 @@ class LXD(rqlite):
                 continue
 
             if not 'values' in node['results'][0]:
-                result = self.execute(['INSERT INTO nodes(name,memory,updated) VALUES(?, ?, ?)',hostname,memory,int(time.time())])
+                result = self.execute(['INSERT INTO nodes(name,memory,updated) VALUES(?, ?, ?)',hostname,hostMemory,int(time.time())])
             else:
-                self.execute(['UPDATE nodes SET memory = ?, updated = ?',memory,int(time.time())])
+                self.execute(['UPDATE nodes SET memory = ?, updated = ? WHERE name = ?',hostMemory,int(time.time()),hostname])
             break
 
         while True:
@@ -43,39 +43,48 @@ class LXD(rqlite):
 
             machineList,containerList = {},[]
             for machine in machines['results'][0]['values']:
-                machineList[machine[0]] = machine[1]
+                machineList[machine[0]] = {"node":machine[1],"memory":machine[3]}
 
             current = nodes[hostname]
             if current['leader'] is True:
-                for machine,node in machineList.items():
+                for machine,details in machineList.items():
                     #check if anything is not allocated
-                    if node is None:
-                        self.switchMachine(nodes,machine)
+                    if details['node'] is None:
+                        self.switchMachine(nodes,machine,machines,hostMemory,details['memory'])
                         continue
                     #checking if anything wen't down
-                    if node in nodes and nodes[node]['reachable'] is not True:
-                        self.switchMachine(nodes,machine)
+                    if details['node'] in nodes and nodes[details['node']]['reachable'] is not True:
+                        self.switchMachine(nodes,machine,machines,hostMemory,details['memory'])
 
             #check existing containers
             for container in containers:
                 containerList.append(container['name'])
-                if container['name'] not in machineList:
+                if container['name'] not in machineList or machineList[container['name']]['node'] != hostname:
                     self.terminate(container)
-                else:
-                    if machineList[container['name']] != hostname:
-                        self.terminate(container)
             #check if we should deploy a new one
             for machine in machines['results'][0]['values']:
                 if machine[1] == hostname and machine[0] not in containerList:
                     self.deploy(machine)
             time.sleep(20)
 
+    def getMemoryUsage(self,node,machines):
+        total = 0
+        for machine in machines['results'][0]['values']:
+            if machine[1] == node: total = total + int(machine[3])
+        return total
+
     def deploy(self,machine):
         print("Deploying",machine[0])
         subprocess.call(['lxc', 'launch',machine[2],machine[0],"-c","limits.memory="+str(machine[3])+"MB"])
         time.sleep(15)
         print("Script",machine[0])
-        subprocess.call(['lxc', 'exec',machine[0],"--","bash","-c",machine[4]])
+        subprocess.call(['lxc', 'exec',machine[0],"--","bash","-c",machine[5]])
+        if machine[4] == 0: return
+        print("Ports",machine[0])
+        ports = machine[4].split(",")
+        for port in ports:
+            parts = port.split(":")
+            subprocess.call(['lxc','config','device','add',machine[0],'port'+str(parts[0]),'proxy','listen=tcp:0.0.0.0:'+str(parts[0]),'connect=tcp:127.0.0.1:'+str(parts[1])])
 
     def terminate(self,machine):
         print("Deleting",machine['name'])
@@ -83,9 +92,9 @@ class LXD(rqlite):
             subprocess.call(['lxc', 'stop',machine['name']])
         subprocess.call(['lxc', 'delete',machine['name']])
 
-    def switchMachine(self,nodes,machine):
+    def switchMachine(self,nodes,machine,machines,hostMemory,memory):
         print("Switching",machine)
         for node,data in nodes.items():
-            if data['reachable'] is True:
+            if data['reachable'] is True and hostMemory > int(memory) + self.getMemoryUsage(node,machines):
                 print("Switching",machine,"to",node)
-                self.execute(['UPDATE machines SET node = ?',node])
+                self.execute(['UPDATE machines SET node = ? WHERE name = ?',node,machine])
