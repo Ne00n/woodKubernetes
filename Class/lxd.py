@@ -20,7 +20,7 @@ class LXD(rqlite):
             if not 'values' in node['results'][0]:
                 result = self.execute(['INSERT INTO nodes(name,memory,updated) VALUES(?, ?, ?)',hostname,hostMemory,int(time.time())])
             else:
-                self.execute(['UPDATE nodes SET memory = ?, updated = ?',hostMemory,int(time.time())])
+                self.execute(['UPDATE nodes SET memory = ?, updated = ? WHERE name = ?',hostMemory,int(time.time()),hostname])
             break
 
         while True:
