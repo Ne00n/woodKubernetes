@@ -50,11 +50,11 @@ class LXD(rqlite):
                 for machine,node in machineList.items():
                     #check if anything is not allocated
                     if node is None:
-                        self.switchMachine(nodes,machine)
+                        self.switchMachine(nodes,machine,machines,memory)
                         continue
                     #checking if anything wen't down
                     if node in nodes and nodes[node]['reachable'] is not True:
-                        self.switchMachine(nodes,machine)
+                        self.switchMachine(nodes,machine,machines,memory)
 
             #check existing containers
             for container in containers:
@@ -69,6 +69,12 @@ class LXD(rqlite):
                 if machine[1] == hostname and machine[0] not in containerList:
                     self.deploy(machine)
             time.sleep(20)
+
+    def getMemoryUsage(self,node,machines):
+        total = 0
+        for machine in machines['results'][0]['values']:
+            if machine[1] == node: total = total + int(machine[3])
+        return total
 
     def deploy(self,machine):
         print("Deploying",machine[0])
@@ -89,9 +95,9 @@ class LXD(rqlite):
             subprocess.call(['lxc', 'stop',machine['name']])
         subprocess.call(['lxc', 'delete',machine['name']])
 
-    def switchMachine(self,nodes,machine):
+    def switchMachine(self,nodes,machine,machines,memory):
         print("Switching",machine)
         for node,data in nodes.items():
-            if data['reachable'] is True:
+            if data['reachable'] is True and memory > self.getMemoryUsage(node,machines):
                 print("Switching",machine,"to",node)
                 self.execute(['UPDATE machines SET node = ?',node])
