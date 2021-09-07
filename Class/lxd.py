@@ -76,10 +76,10 @@ class LXD(rqlite):
         time.sleep(15)
         print("Script",machine[0])
         subprocess.call(['lxc', 'exec',machine[0],"--","bash","-c",machine[5]])
+        if machine[4] == 0: return
         print("Ports",machine[0])
         ports = machine[4].split(",")
         for port in ports:
-            if port == 0: break
             parts = port.split(":")
             subprocess.call(['lxc','config','device','add',machine[0],'port'+str(parts[0]),'proxy','listen=tcp:0.0.0.0:'+str(parts[0]),'connect=tcp:127.0.0.1:'+str(parts[1])])
 
