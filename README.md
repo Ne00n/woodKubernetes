@@ -55,13 +55,13 @@ python3 wood.py service
 
 nginx example
 ```
-python3 cli.py machine add one debian/buster 256 \
-"apt-get install wget -y && wget -qO - https://gist.githubusercontent.com/Ne00n/c33cd89a69c039f0279930c70d46433b/raw/ec64796e6bd4bb489932e6db97782477c3e36ffb/test | bash"
+python3 cli.py machine add one debian/buster 256 80:80,443:443 \
+"apt-get install nginx -y"
 ```
 znc example
 ```
-python3 cli.py machine add one debian/buster 256 \
-"apt-get install wget -y && wget -qO - https://gist.githubusercontent.com/Ne00n/1fa5851bb86927e68ac82015da5a6744/raw/4a3b783719c12781004202cac3bf9c96d73582b3/znc%2520test%2520deploy | bash"
+python3 cli.py machine add one debian/buster 256 1025:1025 \
+"apt-get install nginx -y && wget -qO - https://gist.githubusercontent.com/Ne00n/1fa5851bb86927e68ac82015da5a6744/raw/4a3b783719c12781004202cac3bf9c96d73582b3/znc%2520test%2520deploy | bash"
 ```
 
 **preload**<br />
