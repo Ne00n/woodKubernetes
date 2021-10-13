@@ -27,7 +27,7 @@ class Cert(rqlite):
         apis = self.query(["SELECT * FROM apis WHERE name = ?",api])
         if apis is False: return False
         if 'values' not in apis['results'][0]: return False
-        apis = apis['results'][0]['values']
+        apis = apis['results'][0]['values'][0]
         response = {"up":[],"down":[]}
         urls = apis[2].split(",")
         response['up'] = self.buildbuildUrls(urls,domain,token)
