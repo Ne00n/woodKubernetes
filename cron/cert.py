@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import sys
+import time, sys
 sys.path.append("..") # Adds higher directory to python modules path.
 
 from Class.cert import Cert
