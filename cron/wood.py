@@ -7,6 +7,6 @@ from Class.lxd import LXD
 lxd = LXD()
 
 if len(sys.argv) == 1:
-    print("lxd")
+    print("lxd, cert")
 elif sys.argv[1] == "lxd":
     lxd.run()

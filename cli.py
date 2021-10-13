@@ -10,7 +10,7 @@ elif sys.argv[1] == "init":
     cli.init()
 elif sys.argv[1] == "cert":
     if len(sys.argv) == 2:
-        print("cert add <domain> <machine> <api>\cert list\cert del <domain>")
+        print("cert add <domain> <email> <machine> <api>\cert list\cert del <domain>")
     elif sys.argv[2] == "add":
         cli.addCert(sys.argv[3:])
     elif sys.argv[2] == "list":
