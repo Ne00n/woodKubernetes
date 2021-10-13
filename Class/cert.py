@@ -84,7 +84,7 @@ class Cert(rqlite):
             print("Not leader, aborting.")
             return False
 
-        print("Getting doamins")
+        print("Getting certs")
         domains = self.query(['SELECT * FROM certs'])
 
         if domains is False:
