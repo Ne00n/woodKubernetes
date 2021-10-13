@@ -61,7 +61,14 @@ class Wood:
             self.cmd(details['ip'],'systemctl start woodKubernetes')
 
     def preload(self):
-        template = input("What image should be preloaded? e.g debian/buster/amd64: ")
+        print("--- Quick options ---")
+        os = ["debian/buster/amd64","debian/buster/arm64","debian/bullseye/amd64","debian/bullseye/arm64"]
+        for index, entry in enumerate(os):
+            print(index,entry)
+        template = input("What image should be preloaded? ")
+        if template.isnumeric():
+            for index, entry in enumerate(os):
+                if int(template) == index: template = entry
         for name,details in self.servers['servers'].items():
             print(name,"preloading",template)
             self.cmd(details['ip'],'/snap/bin/lxc image copy images:'+template+' local: --copy-aliases --auto-update')
