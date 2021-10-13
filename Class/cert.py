@@ -58,7 +58,7 @@ class Cert(rqlite):
             if client.check_dns_propagation(timeout=1200):
                 print("Requesting certificate")
                 client.request_certificate()
-                fullchain = client.certificate.qqdecode()
+                fullchain = client.certificate.decode()
                 privkey = client.private_key.decode()
                 self.updateCert([domain,fullchain,privkey,int(time.time())])
             else:
