@@ -7,5 +7,5 @@ from Class.cert import Cert
 cert = Cert()
 
 while True:
-    cert.renew())
+    cert.renew()
     time.sleep(30)
