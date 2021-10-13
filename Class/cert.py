@@ -96,7 +96,7 @@ class Cert(rqlite):
 
         for row in domains['results'][0]['values']:
             if row[4] == None:
-                print("Missing cert for",target)
+                print("Missing cert for",row[0])
 
                 response = self.getCert(row[0],row[1],row[3])
                 if response is False:
