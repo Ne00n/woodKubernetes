@@ -26,6 +26,7 @@ class rqlite:
 
     def query(self,query,level="none",timings="&timings"):
         url = 'http://'+self.ip+':'+str(self.port)+'/db/query?pretty'+timings+'&level='+level
+        query = [query]
         return self.curl(url,query)
 
     def execute(self,query):

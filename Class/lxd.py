@@ -12,7 +12,7 @@ class LXD(rqlite):
 
         hostMemory = int(psutil.virtual_memory().total / 1e+6)
         while True:
-            node = self.query(['SELECT * FROM nodes WHERE name = "'+hostname+'"'])
+            node = self.query(['SELECT * FROM nodes WHERE name =  ?',hostname])
             if node is False:
                 time.sleep(10)
                 continue
