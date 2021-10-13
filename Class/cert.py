@@ -11,13 +11,14 @@ class Cert(rqlite):
     def buildbuildUrls(self,urls,domain,token):
         response = []
         for url in urls:
-            subdomain = "_acme-challenge"
+            subdomain = ""
             parts = domain.split(".")
             if len(parts) > 2:
                 parts = parts[:len(parts) -2]
-                subdomain += "." + '.'.join(parts)
+                subdomain = '.'.join(parts)
             #api.dns.com/mahkey/%domain%/%subdomain%/TXT/add/%challenge%
             url = url.replace("domain",domain.replace(subdomain,""))
+            subdomain = "_acme-challenge." + subdomain
             url = url.replace("subdomain",subdomain)
             url = url.replace("challenge",token)
             response.append(url)
