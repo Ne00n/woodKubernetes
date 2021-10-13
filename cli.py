@@ -5,7 +5,7 @@ import sys
 cli = CLI()
 
 if len(sys.argv) == 1:
-    print("init, cert, machine")
+    print("init, cert, api, machine")
 elif sys.argv[1] == "init":
     cli.init()
 elif sys.argv[1] == "cert":
@@ -17,6 +17,15 @@ elif sys.argv[1] == "cert":
         cli.getTable("certs")
     elif sys.argv[2] == "del":
         cli.deleteCert(sys.argv[3:])
+elif sys.argv[1] == "api":
+    if len(sys.argv) == 2:
+        print("cert add <name> <type> <up> <down>\api list\api del <name>")
+    elif sys.argv[2] == "add":
+        cli.addApi(sys.argv[3:])
+    elif sys.argv[2] == "list":
+        cli.getTable("apis")
+    elif sys.argv[2] == "del":
+        cli.deleteApi(sys.argv[3:])
 elif sys.argv[1] == "machine":
     if len(sys.argv) == 2:
         print("machine add <name> <os> <memory> <ports> <deploy>\nmachine list\nmachine del <name>")

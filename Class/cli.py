@@ -10,7 +10,12 @@ class CLI(rqlite):
 
     def addCert(self,data):
         print("adding",data[0])
-        response = self.execute(['INSERT INTO certs(domain,machine,api) VALUES(?, ?, ?)',data[0],data[1],data[2]])
+        response = self.execute(['INSERT INTO certs(domain,email,machine,api) VALUES(?, ?, ?, ?)',data[0],data[1],data[2],data[3]])
+        print(json.dumps(response, indent=4, sort_keys=True))
+
+    def addApi(self,data):
+        print("adding",data[0])
+        response = self.execute(['INSERT INTO apis(name,type,up,down) VALUES(?, ?, ?, ?)',data[0],data[1],data[2],data[3]])
         print(json.dumps(response, indent=4, sort_keys=True))
 
     def getTable(self,table="machines"):
@@ -23,4 +28,8 @@ class CLI(rqlite):
 
     def deleteCert(self,data):
         response = self.execute(['DELETE FROM certs WHERE domain=?',data[0]])
+        print(json.dumps(response, indent=4, sort_keys=True))
+
+    def deleteApi(self,data):
+        response = self.execute(['DELETE FROM apis WHERE name=?',data[0]])
         print(json.dumps(response, indent=4, sort_keys=True))
