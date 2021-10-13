@@ -17,9 +17,9 @@ class Cert(rqlite):
                 parts = parts[:len(parts) -2]
                 subdomain = '.'.join(parts)
             #api.dns.com/mahkey/%domain%/%subdomain%/TXT/add/%challenge%
-            url = url.replace("domain",domain.replace(subdomain,""))
+            url = url.replace("domain",domain.replace(subdomain+".",""))
             subdomain = "_acme-challenge." + subdomain
-            url = url.replace("subdomain",subdomain)
+            url = url.replace("sub",subdomain)
             url = url.replace("challenge",token)
             response.append(url)
         return response
