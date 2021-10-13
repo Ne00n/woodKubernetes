@@ -16,7 +16,7 @@ class Cert(rqlite):
             if len(parts) > 2:
                 parts = parts[:len(parts) -2]
                 subdomain = '.'.join(parts)
-            #api.dns.com/mahkey/%domain%/%subdomain%/TXT/add/%challenge%
+            #api.dns.com/mahkey/%domain%/%sub%/TXT/add/%challenge%
             url = url.replace("domain",domain.replace(subdomain+".",""))
             subdomain = "_acme-challenge." + subdomain
             url = url.replace("sub",subdomain)
