@@ -37,8 +37,8 @@ class Cert(rqlite):
         return response
 
     def getCert(self,domain,email,api):
-        #directory = "https://acme-v02.api.letsencrypt.org/directory"
-        directory = "https://acme-staging-v02.api.letsencrypt.org/directory"
+        directory = "https://acme-v02.api.letsencrypt.org/directory"
+        #directory = "https://acme-staging-v02.api.letsencrypt.org/directory"
         try:
             client = simple_acme_dns.ACMEClient(domains=[domain],email=email,directory=directory,nameservers=["8.8.8.8", "1.1.1.1"],new_account=True,generate_csr=True)
         except Exception as e:
