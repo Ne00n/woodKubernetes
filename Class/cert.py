@@ -3,9 +3,6 @@ import simple_acme_dns, requests, json, time, sys, os
 
 class Cert(rqlite):
 
-    def __init__(self):
-        self.cli = CLI()
-
     def updateCert(self,data):
         print("updating",data[0])
         response = self.execute(['UPDATE certs SET fullchain = ?,privkey = ?,updated = ? WHERE domain = ?',data[1],data[2],data[3],data[0]])
@@ -88,7 +85,7 @@ class Cert(rqlite):
             return False
 
         print("Getting doamins")
-        domains = self.cli.query(['SELECT * FROM certs'])
+        domains = self.query(['SELECT * FROM certs'])
 
         if domains is False:
             print("rqlite gone")
