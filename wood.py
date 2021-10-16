@@ -9,7 +9,7 @@ if len(sys.argv) > 2:
 wood = Wood(config)
 
 if len(sys.argv) == 1:
-    print("lxd")
+    print("lxd, rqlite, wood, service, preload, update")
 elif sys.argv[1] == "lxd":
     wood.lxd()
 elif sys.argv[1] == "rqlite":

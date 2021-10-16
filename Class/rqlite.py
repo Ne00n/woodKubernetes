@@ -26,6 +26,7 @@ class rqlite:
 
     def query(self,query,level="none",timings="&timings"):
         url = 'http://'+self.ip+':'+str(self.port)+'/db/query?pretty'+timings+'&level='+level
+        query = [query]
         return self.curl(url,query)
 
     def execute(self,query):
@@ -44,4 +45,7 @@ class rqlite:
     def init(self):
         self.execute(["CREATE TABLE nodes (name TEXT NOT NULL PRIMARY KEY, memory INTEGER NOT NULL, updated INTEGER NOT NULL)"])
         self.execute(["CREATE TABLE machines (name TEXT NOT NULL PRIMARY KEY, node TEXT NULL, os TEXT NOT NULL, memory INTEGER NOT NULL, ports TEXT NOT NULL, deploy TEXT NULL, FOREIGN KEY(node) REFERENCES nodes(name) ON DELETE CASCADE)"])
+        self.execute(["CREATE TABLE certs (domain TEXT NOT NULL PRIMARY KEY, email TEXT NOT NULL, machine TEXT NOT NULL, api TEXT NOT NULL, fullchain TEXT NULL, privkey TEXT NULL, updated INTEGER NULL, FOREIGN KEY(machine) REFERENCES machines(name) ON DELETE CASCADE)"])
+        self.execute(["CREATE TABLE apis (name TEXT NOT NULL PRIMARY KEY, type TEXT NOT NULL, up TEXT NOT NULL, down TEXT NOT NULL)"])
+        self.execute(["CREATE TABLE fids (fid TEXT NOT NULL PRIMARY KEY, machine TEXT NULL, tag TEXT NOT NULL, FOREIGN KEY(machine) REFERENCES machines(name) ON DELETE CASCADE)"])
         self.execute(["PRAGMA foreign_keys = ON"])

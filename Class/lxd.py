@@ -12,9 +12,9 @@ class LXD(rqlite):
 
         hostMemory = int(psutil.virtual_memory().total / 1e+6)
         while True:
-            node = self.query(['SELECT * FROM nodes WHERE name = "'+hostname+'"'])
+            node = self.query(['SELECT * FROM nodes WHERE name =  ?',hostname])
             if node is False:
-                time.sleep(20)
+                time.sleep(10)
                 continue
 
             if not 'values' in node['results'][0]:
@@ -27,7 +27,7 @@ class LXD(rqlite):
             nodes = self.nodes()
             if hostname not in nodes:
                 print("Warning, could not find",hostname,"in rqlite nodes")
-                time.sleep(20)
+                time.sleep(10)
                 continue
 
             containersRaw = subprocess.check_output(['lxc', 'list', '--format=json']).decode("utf-8")
@@ -38,7 +38,7 @@ class LXD(rqlite):
                 print("No machines found")
                 if machines is not False:
                     for container in containers: self.terminate(container)
-                time.sleep(20)
+                time.sleep(10)
                 continue
 
             machineList,containerList = {},[]
@@ -65,7 +65,7 @@ class LXD(rqlite):
             for machine in machines['results'][0]['values']:
                 if machine[1] == hostname and machine[0] not in containerList:
                     self.deploy(machine)
-            time.sleep(20)
+            time.sleep(10)
 
     def getMemoryUsage(self,node,machines):
         total = 0
