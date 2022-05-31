@@ -8,24 +8,6 @@ if len(sys.argv) == 1:
     print("init, cert, api, machine")
 elif sys.argv[1] == "init":
     cli.init()
-elif sys.argv[1] == "cert":
-    if len(sys.argv) == 2:
-        print("cert add <domain> <email> <machine> <api>\cert list\cert del <domain>")
-    elif sys.argv[2] == "add":
-        cli.addCert(sys.argv[3:])
-    elif sys.argv[2] == "list":
-        cli.getTable("certs")
-    elif sys.argv[2] == "del":
-        cli.deleteCert(sys.argv[3:])
-elif sys.argv[1] == "api":
-    if len(sys.argv) == 2:
-        print("cert add <name> <type> <up> <down>\api list\api del <name>")
-    elif sys.argv[2] == "add":
-        cli.addApi(sys.argv[3:])
-    elif sys.argv[2] == "list":
-        cli.getTable("apis")
-    elif sys.argv[2] == "del":
-        cli.deleteApi(sys.argv[3:])
 elif sys.argv[1] == "machine":
     if len(sys.argv) == 2:
         print("machine add <name> <os> <memory> <ports> <deploy>\nmachine list\nmachine del <name>")

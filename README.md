@@ -16,7 +16,7 @@
 **Features**<br />
 - High Availability
 - Port Forwarding
-- ACME Support (LE)
+- Mount Folders from glusterFS/seaweedFS
 
 **Requirements**
 - 3+ Nodes with Ubuntu 20.04 or Debian 10
