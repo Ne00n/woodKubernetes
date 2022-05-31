@@ -5,7 +5,7 @@ import sys
 cli = CLI()
 
 if len(sys.argv) == 1:
-    print("init, cert, api, machine")
+    print("init, machine")
 elif sys.argv[1] == "init":
     cli.init()
 elif sys.argv[1] == "machine":
