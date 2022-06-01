@@ -44,5 +44,5 @@ class rqlite:
 
     def init(self):
         self.execute(["CREATE TABLE nodes (name TEXT NOT NULL PRIMARY KEY, memory INTEGER NOT NULL, updated INTEGER NOT NULL)"])
-        self.execute(["CREATE TABLE machines (name TEXT NOT NULL PRIMARY KEY, node TEXT NULL, os TEXT NOT NULL, memory INTEGER NOT NULL, ports TEXT NOT NULL, deploy TEXT NULL, FOREIGN KEY(node) REFERENCES nodes(name) ON DELETE CASCADE)"])
+        self.execute(["CREATE TABLE machines (name TEXT NOT NULL PRIMARY KEY, node TEXT NULL, os TEXT NOT NULL, memory INTEGER NOT NULL, ports TEXT NOT NULL, deploy TEXT NULL, mount TEXT NULL, FOREIGN KEY(node) REFERENCES nodes(name) ON DELETE CASCADE)"])
         self.execute(["PRAGMA foreign_keys = ON"])
