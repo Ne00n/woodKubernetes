@@ -79,12 +79,18 @@ class LXD(rqlite):
         time.sleep(15)
         print("Script",machine[0])
         subprocess.call(['lxc', 'exec',machine[0],"--","bash","-c",machine[5]])
-        if machine[4] == 0: return
-        print("Ports",machine[0])
-        ports = machine[4].split(",")
-        for port in ports:
-            parts = port.split(":")
-            subprocess.call(['lxc','config','device','add',machine[0],'port'+str(parts[0]),'proxy','listen=tcp:0.0.0.0:'+str(parts[0]),'connect=tcp:127.0.0.1:'+str(parts[1])])
+        if machine[4] != 0:
+            print("Ports",machine[0])
+            ports = machine[4].split(",")
+            for port in ports:
+                ingress, egress = port.split(':')
+                subprocess.call(['lxc','config','device','add',machine[0],f'port{str(ingress)}','proxy',f'listen=tcp:0.0.0.0:{str(egress)}',f'connect=tcp:127.0.0.1:{str(egress)}'])
+            mounts = machine[5].split(",")
+        if machine[5] != "none":
+            for mount in mounts:
+                parts = mount.split(":")
+                source, path = mount.split(':')
+                subprocess.call(['lxc','config','device','add',machine[0],{source},'disk',f'source={source}',f'path={path}'])
 
     def terminate(self,machine):
         print("Deleting",machine['name'])
