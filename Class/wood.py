@@ -26,10 +26,16 @@ class Wood:
             time.sleep(random.randint(5, 15))
 
     def lxd(self):
-        size = input("How big should the btrfs storage pool be? (GB): ")
+        poolDriver = input("What storage type should be used? (btrfs or lvm): ")
+        poolType = input("Loop disk or Dedicated partition/disk? (loop or /dev/sda..,): ")
+        poolSize = input(f"How big should the {poolType} storage pool be? min. 5GB (GB): ") if poolType == "loop" else 0
         for name,details in self.servers['servers'].items():
+            lxd = "apt-get update && apt-get install snap snapd -y && snap install core && snap install lxd --channel=4.0/stable && /snap/bin/lxd init --auto"
             print(name,"Installing LXD")
-            self.cmd(details['ip'],'apt-get update && apt-get install snap snapd -y && snap install core && snap install lxd --channel=4.0/stable && /snap/bin/lxd init --auto  --storage-backend=lvm --storage-create-loop='+str(size))
+            if poolType == "loop":
+                self.cmd(details['ip'],f'{lxd} --storage-backend={poolDriver} --storage-create-loop={str(size)}')
+            else:
+                self.cmd(details['ip'],f'{lxd} --storage-backend={poolDriver} --storage-create-device={poolType}')
 
     def rqlite(self):
         first = next(iter(self.servers['servers'].keys()))
