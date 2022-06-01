@@ -66,7 +66,7 @@ python3 cli.py machine add one debian/buster 256 "apt-get install nginx -y" \
 nginx example + dir mount
 ```
 python3 cli.py machine add one debian/buster 256 "apt-get install nginx -y" \
-80:80,443:443 /var/www/:/mnt/data/www/ 
+80:80,443:443 /mnt/data/www/:/var/www/
 ```
 znc example
 ```
