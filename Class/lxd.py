@@ -80,13 +80,14 @@ class LXD(rqlite):
         print("Script",machine[0])
         subprocess.call(['lxc', 'exec',machine[0],"--","bash","-c",machine[5]])
         if machine[4] != 0:
-            print("Ports",machine[0])
+            print(f"{machine[0]} Ports")
             ports = machine[4].split(",")
             for port in ports:
                 ingress, egress = port.split(':')
                 subprocess.call(['lxc','config','device','add',machine[0],f'port{str(ingress)}','proxy',f'listen=tcp:0.0.0.0:{str(egress)}',f'connect=tcp:127.0.0.1:{str(egress)}'])
             mounts = machine[5].split(",")
         if machine[5] != "none":
+            print(f"{machine[0]} Mounts")
             for mount in mounts:
                 parts = mount.split(":")
                 source, path = mount.split(':')
