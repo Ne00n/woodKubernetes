@@ -4,7 +4,7 @@ class rqlite:
 
     ip,port = "rqlite",4003
 
-    def curl(self,url,query):
+    def curl(self,url,query=[]):
         headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8'}
         #retry 4 times
         for run in range(4):
@@ -36,11 +36,11 @@ class rqlite:
 
     def status(self):
         url = 'http://'+self.ip+':'+str(self.port)+'/status?pretty'
-        return self.curl(url,[])
+        return self.curl(url)
 
     def nodes(self):
         url = 'http://'+self.ip+':'+str(self.port)+'/nodes?pretty'
-        return self.curl(url,[])
+        return self.curl(url)
 
     def init(self):
         self.execute(["CREATE TABLE nodes (name TEXT NOT NULL PRIMARY KEY, memory INTEGER NOT NULL, updated INTEGER NOT NULL)"])
