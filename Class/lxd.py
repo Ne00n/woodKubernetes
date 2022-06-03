@@ -75,19 +75,21 @@ class LXD(rqlite):
 
     def deploy(self,machine):
         print("Deploying",machine[0])
-        subprocess.call(['lxc', 'launch',machine[2],machine[0],"-c","limits.memory="+str(machine[3])+"MB"])
+        subprocess.call(['lxc', 'launch',machine[2],machine[0],"-c","limits.memory="+str(machine[4])+"MB"])
+        subprocess.call(['lxc','config','set',machine[0],f'limits.cpu {machine[3]}'])
         time.sleep(15)
         print("Script",machine[0])
         subprocess.call(['lxc', 'exec',machine[0],"--","bash","-c",machine[5]])
-        if machine[4] != 0:
+        if machine[6] != 0:
             print(f"{machine[0]} Ports")
-            ports = machine[4].split(",")
+            ports = machine[6].split(",")
             for port in ports:
                 ingress, egress = port.split(':')
                 subprocess.call(['lxc','config','device','add',machine[0],f'port{str(ingress)}','proxy',f'listen=tcp:0.0.0.0:{str(egress)}',f'connect=tcp:127.0.0.1:{str(egress)}'])
-            mounts = machine[5].split(",")
-        if machine[5] != "none":
+            mounts = machine[6].split(",")
+        if machine[7] != "none":
             print(f"{machine[0]} Mounts")
+            mounts = machine[7].split(",")
             for mount in mounts:
                 parts = mount.split(":")
                 source, path = mount.split(':')
