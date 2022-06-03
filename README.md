@@ -60,17 +60,17 @@ This results in faster deploy times and don't affect you if the image server is 
 
 nginx example
 ```
-python3 cli.py machine add one debian/buster 1 256 "apt-get install nginx -y" \
+python3 cli.py machine add one debian/buster 1 256MB 2GB "apt-get install nginx -y" \
 80:80,443:443 
 ```
 nginx example + dir mount
 ```
-python3 cli.py machine add one debian/buster 1 256 "apt-get install nginx -y" \
+python3 cli.py machine add one debian/buster 1 256MB 2GB "apt-get install nginx -y" \
 80:80,443:443 /mnt/data/www/:/var/www/
 ```
 znc example
 ```
-python3 cli.py machine add one debian/buster 1 256 "apt-get install wget znc -y" \
+python3 cli.py machine add one debian/buster 1 256MB 2GB "apt-get install wget znc -y" \
 1025:1025
 ```
 If you want no port forwarding use 0 instead

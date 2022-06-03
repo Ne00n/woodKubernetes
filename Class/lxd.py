@@ -77,19 +77,19 @@ class LXD(rqlite):
         print("Deploying",machine[0])
         subprocess.call(['lxc', 'launch',machine[2],machine[0],"-c","limits.memory="+str(machine[4])+"MB"])
         subprocess.call(['lxc','config','set',machine[0],f'limits.cpu {machine[3]}'])
+        subprocess.call(['lxc','config','device','set',machine[0],'root','size',f'{machine[5]}GB'])
         time.sleep(15)
         print("Script",machine[0])
-        subprocess.call(['lxc', 'exec',machine[0],"--","bash","-c",machine[5]])
-        if machine[6] != 0:
+        subprocess.call(['lxc', 'exec',machine[0],"--","bash","-c",machine[6]])
+        if machine[7] != 0:
             print(f"{machine[0]} Ports")
-            ports = machine[6].split(",")
+            ports = machine[7].split(",")
             for port in ports:
                 ingress, egress = port.split(':')
                 subprocess.call(['lxc','config','device','add',machine[0],f'port{str(ingress)}','proxy',f'listen=tcp:0.0.0.0:{str(egress)}',f'connect=tcp:127.0.0.1:{str(egress)}'])
-            mounts = machine[6].split(",")
-        if machine[7] != "none":
+        if machine[8] != "none":
             print(f"{machine[0]} Mounts")
-            mounts = machine[7].split(",")
+            mounts = machine[8].split(",")
             for mount in mounts:
                 parts = mount.split(":")
                 source, path = mount.split(':')
