@@ -47,6 +47,10 @@ class Wood:
             self.cmd(details['ip'],'echo "'+details['vpn']+' rqlite" >> /etc/hosts')
 
     def wood(self):
+        if len(self.servers['servers']) < 3:
+            print("Warning, you need at least 3 servers to build a cluster")
+            abort = input("Continue (y/n): ")
+            if abort != "y": exit("aborting")
         for name,details in self.servers['servers'].items():
             print(name,"Installing woodKubernetes")
             self.cmd(details['ip'],'apt-get install git python3-pip -y && pip3 install psutil && useradd woodKubernetes -m -d /home/woodKubernetes/ -s /bin/bash && groupadd lxd -f && sudo usermod -a -G lxd woodKubernetes && su woodKubernetes -c "cd; git clone https://github.com/Ne00n/woodKubernetes.git"')
