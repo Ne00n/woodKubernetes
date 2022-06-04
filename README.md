@@ -75,18 +75,18 @@ python3 cli.py machine add one debian/buster 1 256MB 2GB "apt-get install wget z
 ```
 If you want no port forwarding use 0 instead
 
-**Preload**<br />
+**Preload**<br/>
 preload os templates
 ```
 python3 wood.py preload
 ```
 
-**Service**<br> />
+**Service**<br/>
 ```
 python3 wood.py service <config> disable
 ```
 
-**rqlite**<br> />
+**rqlite**<br/>
 ```
 python3 wood.py rqlite <config> purge
 ```
