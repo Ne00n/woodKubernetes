@@ -3,9 +3,12 @@ import sys
 
 print("woodKubernetes")
 config = "servers.json"
+param = ""
 
 if len(sys.argv) > 2:
     config = sys.argv[2]
+if len(sys.argv) > 3:
+    param = sys.argv[3]
 wood = Wood(config)
 
 if len(sys.argv) == 1:
@@ -21,4 +24,4 @@ elif sys.argv[1] == "service":
 elif sys.argv[1] == "preload":
     wood.preload()
 elif sys.argv[1] == "update":
-    wood.update()
+    wood.update(param)

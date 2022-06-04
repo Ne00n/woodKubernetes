@@ -84,4 +84,5 @@ python3 wood.py preload
 **Update**
 ```
 python3 wood.py update
+python3 wood.py update <config> <branch>
 ```
