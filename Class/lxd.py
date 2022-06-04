@@ -110,6 +110,10 @@ class LXD(rqlite):
         subprocess.call(['lxc', 'delete',machine['name']])
 
     def switchMachine(self,nodes,machine,machines,hostMemory,memory):
+        #randomize
+        nodeItems = list(nodes.items())
+        random.shuffle(nodeItems)
+        nodes = dict(nodeItems)
         print("Switching",machine)
         for node,data in nodes.items():
             if data['reachable'] is True and hostMemory > int(memory) + self.getMemoryUsage(node,machines):
