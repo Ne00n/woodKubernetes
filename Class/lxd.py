@@ -79,7 +79,7 @@ class LXD(rqlite):
 
     def deploy(self,machine):
         print("Deploying",machine[0])
-        subprocess.call(['lxc','launch',machine[2],machine[0],'-c',f'limits.memory={machine[4]}MB','-c',f'limits.cpu={machine[3]}'])
+        response = subprocess.call(['lxc','launch',machine[2],machine[0],'-c',f'limits.memory={machine[4]}MB','-c',f'limits.cpu={machine[3]}'])
         #on failure, try re-deploy on different node
         if response != 0:
             self.execute(['UPDATE machines SET node = NULL WHERE name = ?',machine[0]])
