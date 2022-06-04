@@ -16,7 +16,7 @@ if len(sys.argv) == 1:
 elif sys.argv[1] == "lxd":
     wood.lxd()
 elif sys.argv[1] == "rqlite":
-    wood.rqlite()
+    wood.rqlite(param)
 elif sys.argv[1] == "wood":
     wood.wood()
 elif sys.argv[1] == "service":

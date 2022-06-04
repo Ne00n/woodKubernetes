@@ -37,14 +37,19 @@ class Wood:
             else:
                 self.cmd(details['ip'],f'{lxd} --storage-backend={poolDriver} --storage-create-device={poolType}')
 
-    def rqlite(self):
+    def rqlite(self,option):
         first = next(iter(self.servers['servers'].keys()))
         for name,details in self.servers['servers'].items():
-            print(name,"Installing rqlite")
-            rqliteConfig = self.templator.rqlite(name,details['vpn'],self.servers['servers'][first]['vpn'])
-            self.cmd(details['ip'],'useradd rqlite -m -d /home/rqlite/ -s /bin/bash && su rqlite -c "cd; wget https://github.com/rqlite/rqlite/releases/download/v'+str(self.servers['rqlite'])+'/rqlite-v'+str(self.servers['rqlite'])+'-linux-amd64.tar.gz && tar xvf rqlite-v'+str(self.servers['rqlite'])+'-linux-amd64.tar.gz && mv rqlite-v'+str(self.servers['rqlite'])+'-linux-amd64 rqlite"')
-            self.cmd(details['ip'],'echo "'+rqliteConfig+'" > /etc/systemd/system/rqlite.service && systemctl enable rqlite && systemctl start rqlite')
-            self.cmd(details['ip'],'echo "'+details['vpn']+' rqlite" >> /etc/hosts')
+            if option == "purge":
+                print(name,"Purging rqlite")
+                self.cmd(details['ip'],'systemctl disable rqlite && systemctl stop rqlite')
+                self.cmd(details['ip'],'userdel -r rqlite')
+            else:
+                print(name,"Installing rqlite")
+                rqliteConfig = self.templator.rqlite(name,details['vpn'],self.servers['servers'][first]['vpn'])
+                self.cmd(details['ip'],'useradd rqlite -m -d /home/rqlite/ -s /bin/bash && su rqlite -c "cd; wget https://github.com/rqlite/rqlite/releases/download/v'+str(self.servers['rqlite'])+'/rqlite-v'+str(self.servers['rqlite'])+'-linux-amd64.tar.gz && tar xvf rqlite-v'+str(self.servers['rqlite'])+'-linux-amd64.tar.gz && mv rqlite-v'+str(self.servers['rqlite'])+'-linux-amd64 rqlite"')
+                self.cmd(details['ip'],'echo "'+rqliteConfig+'" > /etc/systemd/system/rqlite.service && systemctl enable rqlite && systemctl start rqlite')
+                self.cmd(details['ip'],'echo "'+details['vpn']+' rqlite" >> /etc/hosts')
 
     def wood(self):
         if len(self.servers['servers']) < 3:

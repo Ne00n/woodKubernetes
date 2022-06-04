@@ -86,6 +86,11 @@ python3 wood.py preload
 python3 wood.py service <config> disable
 ```
 
+**rqlite**<br> />
+```
+python3 wood.py rqlite <config> purge
+```
+
 **Update**
 ```
 python3 wood.py update
