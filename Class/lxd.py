@@ -82,7 +82,7 @@ class LXD(rqlite):
         response = subprocess.call(['lxc', 'launch',machine[2],machine[0],"-c","limits.memory="+str(machine[4])+"MB"])
         #on failure, try re-deploy on different node
         if response != 0:
-            self.updateMachine(None,machine)
+            self.updateMachine(None,machine[0])
             return False
         subprocess.call(['lxc','config','set',machine[0],f'limits.cpu {machine[3]}'])
         subprocess.call(['lxc','config','device','set',machine[0],'root','size',f'{machine[5]}GB'])
