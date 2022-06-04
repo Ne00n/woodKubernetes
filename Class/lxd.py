@@ -82,7 +82,7 @@ class LXD(rqlite):
         response = subprocess.call(['lxc', 'launch',machine[2],machine[0],"-c","limits.memory="+str(machine[4])+"MB"])
         #on failure, try re-deploy on different node
         if response != 0:
-            self.updateMachine(None,machine[0])
+            self.execute(['UPDATE machines SET node = NULL WHERE name = ?',machine[0]])
             return False
         subprocess.call(['lxc','config','set',machine[0],f'limits.cpu {machine[3]}'])
         subprocess.call(['lxc','config','device','set',machine[0],'root','size',f'{machine[5]}GB'])
@@ -109,12 +109,9 @@ class LXD(rqlite):
             subprocess.call(['lxc', 'stop',machine['name']])
         subprocess.call(['lxc', 'delete',machine['name']])
 
-    def updateMachine(self,node,machine):
-        self.execute(['UPDATE machines SET node = ? WHERE name = ?',node,machine])
-
     def switchMachine(self,nodes,machine,machines,hostMemory,memory):
         print("Switching",machine)
         for node,data in nodes.items():
             if data['reachable'] is True and hostMemory > int(memory) + self.getMemoryUsage(node,machines):
                 print("Switching",machine,"to",node)
-                self.updateMachine(node,machine)
+                self.execute(['UPDATE machines SET node = ? WHERE name = ?',node,machine])
