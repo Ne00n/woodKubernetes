@@ -25,6 +25,10 @@ class LXD(rqlite):
 
         while True:
             nodes = self.nodes()
+            if nodes is False:
+                print("Warning, could not fetch nodes")
+                time.sleep(10)
+                continue
             if hostname not in nodes:
                 print("Warning, could not find",hostname,"in rqlite nodes")
                 time.sleep(10)
