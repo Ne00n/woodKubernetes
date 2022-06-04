@@ -89,7 +89,7 @@ class LXD(rqlite):
         time.sleep(15)
         print("Script",machine[0])
         subprocess.call(['lxc', 'exec',machine[0],"--","bash","-c",machine[6]])
-        if machine[7] != 0:
+        if machine[7] != "none":
             print(f"{machine[0]} Ports")
             ports = machine[7].split(",")
             for port in ports:

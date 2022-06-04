@@ -73,7 +73,7 @@ znc example
 python3 cli.py machine add one debian/buster 1 256MB 2GB "apt-get install wget znc -y" \
 1025:1025
 ```
-If you want no port forwarding use 0 instead
+If you want no port forwarding use none instead
 
 **Preload**<br/>
 preload os templates
