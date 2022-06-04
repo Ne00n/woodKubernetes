@@ -115,3 +115,4 @@ class LXD(rqlite):
             if data['reachable'] is True and hostMemory > int(memory) + self.getMemoryUsage(node,machines):
                 print("Switching",machine,"to",node)
                 self.execute(['UPDATE machines SET node = ? WHERE name = ?',node,machine])
+                break
