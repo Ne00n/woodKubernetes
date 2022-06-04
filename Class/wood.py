@@ -78,7 +78,9 @@ class Wood:
         template = input("What image should be preloaded? ")
         if template.isnumeric():
             for index, entry in enumerate(os):
-                if int(template) == index: template = entry
+                if int(template) == index: 
+                    template = entry
+                    break
         for name,details in self.servers['servers'].items():
             print(name,"preloading",template)
             self.cmd(details['ip'],'/snap/bin/lxc image copy images:'+template+' local: --copy-aliases --auto-update')
