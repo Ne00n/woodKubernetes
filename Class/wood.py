@@ -55,11 +55,15 @@ class Wood:
             print(name,"Installing woodKubernetes")
             self.cmd(details['ip'],'apt-get install git python3-pip -y && pip3 install psutil && useradd woodKubernetes -m -d /home/woodKubernetes/ -s /bin/bash && groupadd lxd -f && sudo usermod -a -G lxd woodKubernetes && su woodKubernetes -c "cd; git clone https://github.com/Ne00n/woodKubernetes.git"')
 
-    def service(self):
+    def service(self,option):
         for name,details in self.servers['servers'].items():
-            print(name,"Installing service")
-            woodConfig = self.templator.woodKubernetes()
-            self.cmd(details['ip'],'echo "'+woodConfig+'" > /etc/systemd/system/woodKubernetes.service && systemctl enable woodKubernetes && systemctl start woodKubernetes')
+            if option == "disable":
+                print(name,"Disabling service")
+                self.cmd(details['ip'],'systemctl disable woodKubernetes && systemctl stop woodKubernetes')
+            else:
+                print(name,"Installing service")
+                woodConfig = self.templator.woodKubernetes()
+                self.cmd(details['ip'],'echo "'+woodConfig+'" > /etc/systemd/system/woodKubernetes.service && systemctl enable woodKubernetes && systemctl start woodKubernetes')
 
     def update(self,branch="master"):
         for name,details in self.servers['servers'].items():

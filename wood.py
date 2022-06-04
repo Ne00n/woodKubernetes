@@ -20,7 +20,7 @@ elif sys.argv[1] == "rqlite":
 elif sys.argv[1] == "wood":
     wood.wood()
 elif sys.argv[1] == "service":
-    wood.service()
+    wood.service(param)
 elif sys.argv[1] == "preload":
     wood.preload()
 elif sys.argv[1] == "update":
