@@ -82,7 +82,7 @@ class LXD(rqlite):
 
     def deploy(self,machine,host):
         print("Deploying",machine['name'])
-        response = subprocess.call(['lxc','launch',machine['os'],machine['name'],'-c',f'limits.memory={machine['memory']}MB','-c',f'limits.cpu={machine['cores']}'])
+        response = subprocess.call(["lxc","launch",machine['os'],machine['name'],"-c",f"limits.memory={machine['memory']}MB","-c",f"limits.cpu={machine['cores']}"])
         #on failure, try re-deploy on different node
         if response != 0:
             nodes = machine['nodes'].split(",")
@@ -90,7 +90,7 @@ class LXD(rqlite):
             self.execute(['UPDATE machines SET nodes = ? WHERE name = ?',','.join(nodes),machine['name']])
             return False
         #apply storage limit
-        subprocess.call(['lxc','config','device','override',machine['machine'],'root',f'size={machine['storage']}GB'])
+        subprocess.call(["lxc","config","device","override",machine['machine'],"root",f"size={machine['storage']}GB"])
         #wait for boot
         time.sleep(15)
         #run script
