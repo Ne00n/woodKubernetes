@@ -56,11 +56,13 @@ class LXD(rqlite):
                     if details['nodes'] is None:
                         self.switchMachine(nodes,hostname,machine,machines,hostMemory,details)
                         continue
+                    nodes = [] if details['nodes'] is None else details['nodes'].split(",")
                     #checking if anything wen't down
-                    if set(details['nodes'].split(',')).issubset(nodes) and nodes[details['node']]['reachable'] is not True:
+                    if set(nodes).issubset(nodes) and nodes[details['node']]['reachable'] is not True:
                         self.switchMachine(nodes,hostname,machine,machines,hostMemory,details,True)
+                        continue
                     #checking if replica is below target
-                    if len(details['nodes'].split(',')) < details['replica']:
+                    if len(nodes) < details['replica']:
                         self.switchMachine(nodes,"",machine,machines,hostMemory,details,True)
 
             #check existing containers
@@ -70,14 +72,16 @@ class LXD(rqlite):
                     self.terminate(container)
             #check if we should deploy a new one
             for machine in self.table(machines):
-                if hostname in machine['nodes'].split(",") and machine['name'] not in containerList:
+                nodes = [] if machine['nodes'] is None else machine['nodes'].split(",")
+                if hostname in nodes and machine['name'] not in containerList:
                     self.deploy(machine,host)
             time.sleep(10)
 
     def getMemoryUsage(self,node,machines):
         total = 0
         for machine in self.table(machines):
-            if node in machine['nodes'].split(","): total = total + int(machine['memory'])
+            nodes = [] if machine['nodes'] is None else machine['nodes'].split(",")
+            if node in nodes: total = total + int(machine['memory'])
         return total
 
     def deploy(self,machine,host):
