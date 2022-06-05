@@ -42,6 +42,18 @@ class rqlite:
         url = 'http://'+self.ip+':'+str(self.port)+'/nodes?pretty'
         return self.curl(url)
 
+    def table(self,data):
+        table = []
+        if not data: return data
+        colums = data['results'][0]['columns']
+        rows = data['results'][0]['values']
+        for row in rows:
+            tmp = {}
+            for index, colum in enumerate(colums):
+                tmp[colum] = row[index]
+            table.append(tmp)
+        return table
+
     def init(self):
         self.execute(["CREATE TABLE nodes (name TEXT NOT NULL PRIMARY KEY, memory INTEGER NOT NULL, updated INTEGER NOT NULL)"])
         self.execute(["CREATE TABLE machines (name TEXT NOT NULL PRIMARY KEY, replica INTEGER NOT NULL, nodes TEXT NULL, os TEXT NOT NULL, cores INTEGER NOT NULL, memory INTEGER NOT NULL, storage INTEGER NOT NULL, deploy TEXT NULL, ports TEXT NOT NULL, mount TEXT NULL, FOREIGN KEY(node) REFERENCES nodes(name) ON DELETE CASCADE)"])
