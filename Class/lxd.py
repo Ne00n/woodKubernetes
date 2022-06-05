@@ -105,7 +105,7 @@ class LXD(rqlite):
         #wait for boot
         time.sleep(15)
         #run script
-        print("Script",machine[0])
+        print("Script",machine['name'])
         subprocess.call(['lxc', 'exec',machine['name'],"--","bash","-c",machine['deploy']])
         if machine['ports'] != "none":
             print(f"{machine['name']} Ports")
