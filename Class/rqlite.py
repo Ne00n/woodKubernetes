@@ -44,7 +44,6 @@ class rqlite:
 
     def table(self,data):
         table = []
-        if not data: return data
         colums = data['results'][0]['columns']
         rows = data['results'][0]['values']
         for row in rows:
