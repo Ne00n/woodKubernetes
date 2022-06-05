@@ -54,15 +54,16 @@ class LXD(rqlite):
                 for machine,details in machineList.items():
                     #checking if anything is not allocated
                     if details['nodes'] is None:
-                        self.switchMachine(nodes,hostname,machine,machines,hostMemory,details)
+                        self.switchMachine(nodes,"",machine,machines,hostMemory,details)
                         continue
-                    nodes = [] if details['nodes'] is None else details['nodes'].split(",")
+                    containerNodes = [] if details['nodes'] is None else details['nodes'].split(",")
                     #checking if anything wen't down
-                    if set(nodes).issubset(nodes) and nodes[details['node']]['reachable'] is not True:
+                    outage,hostname = self.checkNodes(nodes)
+                    if set(containerNodes).issubset(list(nodes)) and outage is False:
                         self.switchMachine(nodes,hostname,machine,machines,hostMemory,details,True)
                         continue
                     #checking if replica is below target
-                    if len(nodes) < details['replica']:
+                    if len(containerNodes) < details['replica']:
                         self.switchMachine(nodes,"",machine,machines,hostMemory,details,True)
 
             #check existing containers
@@ -83,6 +84,11 @@ class LXD(rqlite):
             nodes = [] if machine['nodes'] is None else machine['nodes'].split(",")
             if node in nodes: total = total + int(machine['memory'])
         return total
+
+    def checkNodes(self,nodes):
+        for node,data in nodes.items():
+            if data['reachable'] is False: return False,node
+        return True,""
 
     def deploy(self,machine,host):
         print("Deploying",machine['name'])
