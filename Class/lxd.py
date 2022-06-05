@@ -52,13 +52,16 @@ class LXD(rqlite):
             current = nodes[hostname]
             if current['leader'] is True:
                 for machine,details in machineList.items():
-                    #check if anything is not allocated
+                    #checking if anything is not allocated
                     if details['nodes'] is None:
                         self.switchMachine(nodes,hostname,machine,machines,hostMemory,details)
                         continue
                     #checking if anything wen't down
                     if set(details['nodes'].split(',')).issubset(nodes) and nodes[details['node']]['reachable'] is not True:
                         self.switchMachine(nodes,hostname,machine,machines,hostMemory,details,True)
+                    #checking if replica is below target
+                    if len(details['nodes'].split(',')) < details['replica']:
+                        self.switchMachine(nodes,"",machine,machines,hostMemory,details,True)
 
             #check existing containers
             for container in containers:
@@ -68,7 +71,7 @@ class LXD(rqlite):
             #check if we should deploy a new one
             for machine in self.table(machines):
                 if hostname in machine['nodes'].split(",") and machine['name'] not in containerList:
-                    self.deploy(machine)
+                    self.deploy(machine,host)
             time.sleep(10)
 
     def getMemoryUsage(self,node,machines):
@@ -77,12 +80,14 @@ class LXD(rqlite):
             if node in machine['nodes'].split(","): total = total + int(machine['memory'])
         return total
 
-    def deploy(self,machine):
+    def deploy(self,machine,host):
         print("Deploying",machine['name'])
         response = subprocess.call(['lxc','launch',machine['os'],machine['name'],'-c',f'limits.memory={machine['memory']}MB','-c',f'limits.cpu={machine['cores']}'])
         #on failure, try re-deploy on different node
         if response != 0:
-            self.execute(['UPDATE machines SET nodes = NULL WHERE name = ?',machine['name']])
+            nodes = machine['nodes'].split(",")
+            nodes.remove(host)
+            self.execute(['UPDATE machines SET nodes = ? WHERE name = ?',','.join(nodes),machine['name']])
             return False
         #apply storage limit
         subprocess.call(['lxc','config','device','override',machine['machine'],'root',f'size={machine['storage']}GB'])
@@ -111,7 +116,7 @@ class LXD(rqlite):
             subprocess.call(['lxc', 'stop',machine['name']])
         subprocess.call(['lxc', 'delete',machine['name']])
 
-    def switchMachine(self,nodes,hostname,machine,machines,hostMemory,details,outage=False):
+    def switchMachine(self,nodes,host,machine,machines,hostMemory,details,outage=False):
         #randomize
         nodeItems = list(nodes.items())
         random.shuffle(nodeItems)
@@ -123,7 +128,7 @@ class LXD(rqlite):
             if data['reachable'] is True and hostMemory > int(details['memory']) + self.getMemoryUsage(node,machines) and node not in deploy:
                 print("Switching",machine,"to",node)
                 #remove old node that has been marked as offline
-                if outage and hostname in deploy: deploy.remove(hostname)
+                if outage and host in deploy: deploy.remove(host)
                 #append new node
                 deploy.append(node)
                 #break if replica limit reached or 0 for all nodes
