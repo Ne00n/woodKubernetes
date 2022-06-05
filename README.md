@@ -20,7 +20,7 @@
 - Replica
 
 **Requirements**
-- 3+ Nodes with Ubuntu 20.04 or Debian 10
+- 3+ Nodes with Ubuntu 20/22.04 or Debian 10/11
 - Each node should have at least 1GB of Memory
 - Mesh VPN connecting them together ([Tinc](https://www.tinc-vpn.org/)/[VpnCloud](https://github.com/dswd/vpncloud)/[Wireguard](https://www.wireguard.com/))
 
