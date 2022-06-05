@@ -58,9 +58,9 @@ class LXD(rqlite):
                         continue
                     containerNodes = [] if details['nodes'] is None else details['nodes'].split(",")
                     #checking if anything wen't down
-                    outage,hostname = self.checkNodes(nodes)
+                    outage,host = self.checkNodes(nodes)
                     if set(containerNodes).issubset(list(nodes)) and outage is False:
-                        self.switchMachine(nodes,hostname,machine,machines,hostMemory,details,True)
+                        self.switchMachine(nodes,host,machine,machines,hostMemory,details,True)
                         continue
                     #checking if replica is below target
                     if len(containerNodes) < details['replica']:
@@ -75,7 +75,7 @@ class LXD(rqlite):
             for machine in self.table(machines):
                 nodes = [] if machine['nodes'] is None else machine['nodes'].split(",")
                 if hostname in nodes and machine['name'] not in containerList:
-                    self.deploy(machine,host)
+                    self.deploy(machine,hostname)
             time.sleep(10)
 
     def getMemoryUsage(self,node,machines):
