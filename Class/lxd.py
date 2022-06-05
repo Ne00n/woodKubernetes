@@ -123,7 +123,7 @@ class LXD(rqlite):
         nodes = dict(nodeItems)
         #switching
         print("Switching",machine)
-        deploy = details['nodes'].split(',') if outage: else []
+        deploy = details['nodes'].split(',') if outage else []
         for node,data in nodes.items():
             if data['reachable'] is True and hostMemory > int(details['memory']) + self.getMemoryUsage(node,machines) and node not in deploy:
                 print("Switching",machine,"to",node)
