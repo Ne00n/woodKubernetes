@@ -46,8 +46,8 @@ class LXD(rqlite):
                 continue
 
             machineList,containerList = {},[]
-            for machine in machines['results'][0]['values']:
-                machineList[machine[0]] = {"node":machine[2],"memory":machine[5]}
+            for machine in self.table(machines):
+                machineList[machine['name']] = {"nodes":machine['nodes'],"memory":machine['memory']}
 
             current = nodes[hostname]
             if current['leader'] is True:
@@ -66,40 +66,40 @@ class LXD(rqlite):
                 if container['name'] not in machineList or machineList[container['name']]['node'] != hostname:
                     self.terminate(container)
             #check if we should deploy a new one
-            for machine in machines['results'][0]['values']:
-                if machine[1] == hostname and machine[0] not in containerList:
+            for machine in self.table(machines):
+                if machine['nodes'] == hostname and machine['name'] not in containerList:
                     self.deploy(machine)
             time.sleep(10)
 
     def getMemoryUsage(self,node,machines):
         total = 0
-        for machine in machines['results'][0]['values']:
-            if machine[2] == node: total = total + int(machine[5])
+        for machine in self.table(machines):
+            if machine['nodes'] == node: total = total + int(machine['memory'])
         return total
 
     def deploy(self,machine):
-        print("Deploying",machine[0])
-        response = subprocess.call(['lxc','launch',machine[3],machine[0],'-c',f'limits.memory={machine[5]}MB','-c',f'limits.cpu={machine[4]}'])
+        print("Deploying",machine['name'])
+        response = subprocess.call(['lxc','launch',machine['os'],machine['name'],'-c',f'limits.memory={machine['memory']}MB','-c',f'limits.cpu={machine['cores']}'])
         #on failure, try re-deploy on different node
         if response != 0:
-            self.execute(['UPDATE machines SET node = NULL WHERE name = ?',machine[0]])
+            self.execute(['UPDATE machines SET nodes = NULL WHERE name = ?',machine['name']])
             return False
         #apply storage limit
-        subprocess.call(['lxc','config','device','override',machine[0],'root',f'size={machine[6]}GB'])
+        subprocess.call(['lxc','config','device','override',machine['machine'],'root',f'size={machine['storage']}GB'])
         #wait for boot
         time.sleep(15)
         #run script
         print("Script",machine[0])
-        subprocess.call(['lxc', 'exec',machine[0],"--","bash","-c",machine[7]])
-        if machine[8] != "none":
-            print(f"{machine[0]} Ports")
-            ports = machine[8].split(",")
+        subprocess.call(['lxc', 'exec',machine['machine'],"--","bash","-c",machine['deploy']])
+        if machine['ports'] != "none":
+            print(f"{machine['name']} Ports")
+            ports = machine['ports'].split(",")
             for port in ports:
                 ingress, egress = port.split(':')
                 subprocess.call(['lxc','config','device','add',machine[0],f'port{str(ingress)}','proxy',f'listen=tcp:0.0.0.0:{str(egress)}',f'connect=tcp:127.0.0.1:{str(egress)}'])
-        if machine[9] != "none":
-            print(f"{machine[0]} Mounts")
-            mounts = machine[9].split(",")
+        if machine['mounts'] != "none":
+            print(f"{machine['name']} Mounts")
+            mounts = machine['mounts'].split(",")
             for mount in mounts:
                 parts = mount.split(":")
                 source, path = mount.split(':')
