@@ -47,7 +47,7 @@ class LXD(rqlite):
 
             machineList,containerList = {},[]
             for machine in machines['results'][0]['values']:
-                machineList[machine[0]] = {"node":machine[1],"memory":machine[3]}
+                machineList[machine[0]] = {"node":machine[2],"memory":machine[5]}
 
             current = nodes[hostname]
             if current['leader'] is True:
@@ -74,32 +74,32 @@ class LXD(rqlite):
     def getMemoryUsage(self,node,machines):
         total = 0
         for machine in machines['results'][0]['values']:
-            if machine[1] == node: total = total + int(machine[3])
+            if machine[2] == node: total = total + int(machine[5])
         return total
 
     def deploy(self,machine):
         print("Deploying",machine[0])
-        response = subprocess.call(['lxc','launch',machine[2],machine[0],'-c',f'limits.memory={machine[4]}MB','-c',f'limits.cpu={machine[3]}'])
+        response = subprocess.call(['lxc','launch',machine[3],machine[0],'-c',f'limits.memory={machine[5]}MB','-c',f'limits.cpu={machine[4]}'])
         #on failure, try re-deploy on different node
         if response != 0:
             self.execute(['UPDATE machines SET node = NULL WHERE name = ?',machine[0]])
             return False
         #apply storage limit
-        subprocess.call(['lxc','config','device','override',machine[0],'root',f'size={machine[5]}GB'])
+        subprocess.call(['lxc','config','device','override',machine[0],'root',f'size={machine[6]}GB'])
         #wait for boot
         time.sleep(15)
         #run script
         print("Script",machine[0])
-        subprocess.call(['lxc', 'exec',machine[0],"--","bash","-c",machine[6]])
-        if machine[7] != "none":
+        subprocess.call(['lxc', 'exec',machine[0],"--","bash","-c",machine[7]])
+        if machine[8] != "none":
             print(f"{machine[0]} Ports")
-            ports = machine[7].split(",")
+            ports = machine[8].split(",")
             for port in ports:
                 ingress, egress = port.split(':')
                 subprocess.call(['lxc','config','device','add',machine[0],f'port{str(ingress)}','proxy',f'listen=tcp:0.0.0.0:{str(egress)}',f'connect=tcp:127.0.0.1:{str(egress)}'])
-        if machine[8] != "none":
+        if machine[9] != "none":
             print(f"{machine[0]} Mounts")
-            mounts = machine[8].split(",")
+            mounts = machine[9].split(",")
             for mount in mounts:
                 parts = mount.split(":")
                 source, path = mount.split(':')

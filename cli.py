@@ -10,9 +10,9 @@ elif sys.argv[1] == "init":
     cli.init()
 elif sys.argv[1] == "machine":
     if len(sys.argv) == 2:
-        print("machine add <name> <os> <cores> <memory> <storage> <deploy>")
-        print("machine add <name> <os> <cores> <memory> <storage> <deploy> <ports>")
-        print("machine add <name> <os> <cores> <memory> <storage> <deploy> <ports> <mount>")
+        print("machine add <name> <replica> <os> <cores> <memory> <storage> <deploy>")
+        print("machine add <name> <replica> <os> <cores> <memory> <storage> <deploy> <ports>")
+        print("machine add <name> <replica> <os> <cores> <memory> <storage> <deploy> <ports> <mounts>")
         print("machine list")
         print("machine del <name>")
     elif sys.argv[2] == "add":
