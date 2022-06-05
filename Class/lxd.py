@@ -137,4 +137,4 @@ class LXD(rqlite):
                 deploy.append(node)
                 #break if replica limit reached or 0 for all nodes
                 if details['replica'] != 0 and details['replica'] == len(deploy): break
-        self.execute(['UPDATE machines SET node = ? WHERE name = ?',','.join(deploy),machine])
+        self.execute(['UPDATE machines SET nodes = ? WHERE name = ?',','.join(deploy),machine])
