@@ -100,12 +100,12 @@ class LXD(rqlite):
             self.execute(['UPDATE machines SET nodes = ? WHERE name = ?',','.join(nodes),machine['name']])
             return False
         #apply storage limit
-        subprocess.call(["lxc","config","device","override",machine['machine'],"root",f"size={machine['storage']}GB"])
+        subprocess.call(["lxc","config","device","override",machine['name'],"root",f"size={machine['storage']}GB"])
         #wait for boot
         time.sleep(15)
         #run script
         print("Script",machine[0])
-        subprocess.call(['lxc', 'exec',machine['machine'],"--","bash","-c",machine['deploy']])
+        subprocess.call(['lxc', 'exec',machine['name'],"--","bash","-c",machine['deploy']])
         if machine['ports'] != "none":
             print(f"{machine['name']} Ports")
             ports = machine['ports'].split(",")
