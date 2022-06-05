@@ -69,7 +69,8 @@ class LXD(rqlite):
             #check existing containers
             for container in containers:
                 containerList.append(container['name'])
-                if container['name'] not in machineList or machineList[container['name']]['node'] != hostname:
+                containerNodes = [] if machineList[container['name']]['nodes'] is None else machineList[container['name']]['nodes'].split(",")
+                if container['name'] not in machineList or hostname not in containerNodes:
                     self.terminate(container)
             #check if we should deploy a new one
             for machine in self.table(machines):
