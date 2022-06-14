@@ -120,7 +120,7 @@ class LXD(rqlite):
                 break
         for ip in localIPs:
             if ip['family'] == "inet":
-                self.execute(['UPDATE machines SET ip = ? WHERE name = ?',ip['address'],machine['name']])
+                self.execute(['UPDATE network SET ipv4 = ? WHERE name = ? AND node = ?',ip['address'],machine['name'],host])
                 break
         #run script
         print("Script",machine['name'])
@@ -160,6 +160,8 @@ class LXD(rqlite):
                 if outage and host in deploy: deploy.remove(host)
                 #append new node
                 deploy.append(node)
+                #update network table
+                self.execute(['INSERT INTO network(machine,node) VALUES(?, ?)',machine,node])
                 #break if replica limit reached or 0 for all nodes
                 if details['replica'] != 0 and details['replica'] == len(deploy): break
         self.execute(['UPDATE machines SET nodes = ? WHERE name = ?',','.join(deploy),machine])
