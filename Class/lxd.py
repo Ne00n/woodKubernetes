@@ -111,6 +111,17 @@ class LXD(rqlite):
         subprocess.call(["lxc","config","device","override",machine['name'],"root",f"size={machine['storage']}GB"])
         #wait for boot
         time.sleep(15)
+        #update network information
+        containersRaw = subprocess.check_output(['lxc', 'list', '--format=json']).decode("utf-8")
+        containers = json.loads(containersRaw)
+        for container in containers:
+            if container['name'] == machine['name']:
+                localIPs = container['state']['network']['eth0']['addresses']
+                break
+        for ip in localIPs:
+            if ip['family'] == "inet":
+                self.execute(['UPDATE machines SET ip = ? WHERE name = ?',ip['address'],machine['name']])
+                break
         #run script
         print("Script",machine['name'])
         subprocess.call(['lxc', 'exec',machine['name'],"--","bash","-c",machine['deploy']])
