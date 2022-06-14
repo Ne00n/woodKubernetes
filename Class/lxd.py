@@ -4,11 +4,14 @@ import subprocess, socket, psutil, random, json, time
 class LXD(rqlite):
 
     def run(self):
+        #get hostname
         hostname = socket.gethostname()
         if "." in hostname:
             sub = hostname.split(".", 1)[0]
         else:
             sub = hostname
+        #get local vpn ip
+        vpnIP = socket.gethostbyname('rqlite')
 
         hostMemory = int(psutil.virtual_memory().total / 1e+6)
         while True:
@@ -18,9 +21,9 @@ class LXD(rqlite):
                 continue
 
             if not 'values' in node['results'][0]:
-                result = self.execute(['INSERT INTO nodes(name,memory,updated) VALUES(?, ?, ?)',hostname,hostMemory,int(time.time())])
+                result = self.execute(['INSERT INTO nodes(name,ip,memory,updated) VALUES(?, ?, ?, ?)',hostname,vpnIP,hostMemory,int(time.time())])
             else:
-                self.execute(['UPDATE nodes SET memory = ?, updated = ? WHERE name = ?',hostMemory,int(time.time()),hostname])
+                self.execute(['UPDATE nodes SET memory = ?, ip = ?, updated = ? WHERE name = ?',hostMemory,vpnIP,int(time.time()),hostname])
             break
 
         while True:
