@@ -66,7 +66,7 @@ class LXD(rqlite):
                         self.switchMachine(nodes,host,machine,machines,hostMemory,details,True)
                         continue
                     #checking if replica is below target
-                    if len(containerNodes) < details['replica']:
+                    if len(containerNodes) < int(details['replica']):
                         self.switchMachine(nodes,"",machine,machines,hostMemory,details,True)
 
             #check existing containers
