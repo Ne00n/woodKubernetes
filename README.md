@@ -82,6 +82,11 @@ preload os templates
 python3 wood.py preload
 ```
 
+**HAProxy**<br/>
+```
+python3 cli.py haproxy add domain.com one
+```
+
 **Service**<br/>
 ```
 python3 wood.py service <config> disable

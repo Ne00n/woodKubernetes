@@ -21,3 +21,14 @@ elif sys.argv[1] == "machine":
         cli.getTable("machines")
     elif sys.argv[2] == "del":
         cli.deleteMachine(sys.argv[3:])
+elif sys.argv[1] == "haproxy":
+    if len(sys.argv) == 2:
+        print("haproxy add <domain> <machine>")
+        print("haproxy list")
+        print("haproxy del <domain>")
+    elif sys.argv[2] == "add":
+        cli.addHaproxy(sys.argv[3:])
+    elif sys.argv[2] == "list":
+        cli.getTable("haproxy")
+    elif sys.argv[2] == "del":
+        cli.deleteHaproxy(sys.argv[3:])
