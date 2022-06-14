@@ -120,7 +120,7 @@ class LXD(rqlite):
                 break
         for ip in localIPs:
             if ip['family'] == "inet":
-                self.execute(['UPDATE network SET ipv4 = ? WHERE name = ? AND node = ?',ip['address'],machine['name'],host])
+                self.execute(['UPDATE network SET ipv4 = ? WHERE machine = ? AND node = ?',ip['address'],machine['name'],host])
                 break
         #run script
         print("Script",machine['name'])
