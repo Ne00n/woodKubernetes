@@ -16,8 +16,9 @@
 **Features**<br />
 - High Availability
 - Port Forwarding
+- HAProxy Support
 - Mount Folders from glusterFS/seaweedFS
-- Replica
+- Replica 0 to Infinity boooyaaaa
 
 **Requirements**
 - 3+ Nodes with Ubuntu 20/22.04 or Debian 10/11
@@ -86,6 +87,7 @@ python3 wood.py preload
 ```
 python3 cli.py haproxy add domain.com one
 ```
+Forwarding Web Traffic from any Node to the specific container(s)
 
 **Service**<br/>
 ```
