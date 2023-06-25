@@ -81,7 +81,7 @@ class Wood:
 
     def preload(self):
         print("--- Quick options ---")
-        os = ["debian/buster/amd64","debian/buster/arm64","debian/bullseye/amd64","debian/bullseye/arm64"]
+        os = ["debian/bullseye/amd64","debian/bullseye/arm64","debian/bookworm/amd64","debian/bookworm/arm64"]
         for index, entry in enumerate(os):
             print(index,entry)
         template = input("What image should be preloaded? ")
