@@ -14,11 +14,11 @@
 - [rqlite](https://github.com/rqlite/rqlite) to store containers info/leader choice
 
 **Features**<br />
-- High Availability
-- Port Forwarding
-- HAProxy Support
-- Mount Folders from glusterFS/seaweedFS
-- Replica 0 to Infinity boooyaaaa
+- [x] High Availability
+- [x] Port Forwarding
+- [ ] HAProxy Support
+- [x] Mount Folders from glusterFS/seaweedFS
+- [x] Replica 0 to Infinity boooyaaaa
 
 **Requirements**
 - 3+ Nodes with Debian 12
