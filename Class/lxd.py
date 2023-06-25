@@ -141,8 +141,7 @@ class LXD(rqlite):
 
     def terminate(self,machine):
         print("Deleting",machine['name'])
-        if machine['state']['status'] == "Running":
-            subprocess.call(['lxc', 'stop',machine['name']])
+        if machine['state']['status'] == "Running": subprocess.call(['lxc', 'stop',machine['name']])
         subprocess.call(['lxc', 'delete',machine['name']])
 
     def switchMachine(self,nodes,host,machine,machines,hostMemory,details,outage=False):
