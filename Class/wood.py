@@ -70,7 +70,7 @@ class Wood:
                 woodConfig = self.templator.woodKubernetes()
                 self.cmd(details['ip'],'echo "'+woodConfig+'" > /etc/systemd/system/woodKubernetes.service && systemctl enable woodKubernetes && systemctl start woodKubernetes')
 
-    def update(self,branch="master"):
+    def update(self,branch="bockworm"):
         for name,details in self.servers['servers'].items():
             print(name,"Stopping woodKubernetes service")
             self.cmd(details['ip'],'systemctl stop woodKubernetes')
