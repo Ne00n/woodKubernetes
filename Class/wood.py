@@ -30,7 +30,7 @@ class Wood:
         poolType = input("Loop disk or Dedicated partition/disk? (loop or /dev/sda..,): ")
         poolSize = input(f"How big should the {poolType} storage pool be? min. 5GB (GB): ") if poolType == "loop" else 0
         for name,details in self.servers['servers'].items():
-            lxd = "apt-get update && apt-get install snap snapd -y && snap install core && snap install lxd --channel=4.0/stable && /snap/bin/lxd init --auto"
+            lxd = "apt-get update && apt-get install lxd -y && /usr/bin/lxd --auto"
             print(name,"Installing LXD")
             if poolType == "loop":
                 self.cmd(details['ip'],f'{lxd} --storage-backend={poolDriver} --storage-create-loop={str(size)}')
