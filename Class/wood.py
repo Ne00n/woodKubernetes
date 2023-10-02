@@ -92,4 +92,4 @@ class Wood:
                     break
         for name,details in self.servers['servers'].items():
             print(name,"preloading",template)
-            self.cmd(details['ip'],'/snap/bin/lxc image copy images:'+template+' local: --copy-aliases --auto-update')
+            self.cmd(details['ip'],'/usr/bin/lxd image copy images:'+template+' local: --copy-aliases --auto-update')
