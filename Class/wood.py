@@ -58,7 +58,7 @@ class Wood:
             if abort != "y": exit("aborting")
         for name,details in self.servers['servers'].items():
             print(name,"Installing woodKubernetes")
-            self.cmd(details['ip'],'apt-get install haproxy git python3-pip -y && pip3 install psutil && useradd woodKubernetes -m -d /home/woodKubernetes/ -s /bin/bash && groupadd lxd -f && sudo usermod -a -G lxd woodKubernetes && su woodKubernetes -c "cd; git clone https://github.com/Ne00n/woodKubernetes.git"')
+            self.cmd(details['ip'],'apt-get install haproxy git python3-psutil -y && useradd woodKubernetes -m -d /home/woodKubernetes/ -s /bin/bash && groupadd lxd -f && sudo usermod -a -G lxd woodKubernetes && su woodKubernetes -c "cd; git clone https://github.com/Ne00n/woodKubernetes.git"')
 
     def service(self,option):
         for name,details in self.servers['servers'].items():
