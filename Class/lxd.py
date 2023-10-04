@@ -125,6 +125,14 @@ class LXD(rqlite):
             if ip['family'] == "inet":
                 self.execute(['UPDATE network SET ipv4 = ? WHERE machine = ? AND node = ?',ip['address'],machine['name'],host])
                 break
+        #mount
+        if machine['mounts'] != "none":
+            print(f"{machine['name']} Mounts")
+            mounts = machine['mounts'].split(",")
+            for mount in mounts:
+                parts = mount.split(":")
+                source, path = mount.split(':')
+                subprocess.call(['lxc','config','device','add',machine['name'],{source},'disk',f'source={source}',f'path={path}'])
         #run script
         print("Script",machine['name'])
         subprocess.call(['lxc', 'exec',machine['name'],"--","bash","-c",machine['deploy']])
@@ -134,13 +142,6 @@ class LXD(rqlite):
             for port in ports:
                 ingress, egress = port.split(':')
                 subprocess.call(['lxc','config','device','add',machine['name'],f'port{str(ingress)}','proxy',f'listen=tcp:0.0.0.0:{str(egress)}',f'connect=tcp:127.0.0.1:{str(egress)}'])
-        if machine['mounts'] != "none":
-            print(f"{machine['name']} Mounts")
-            mounts = machine['mounts'].split(",")
-            for mount in mounts:
-                parts = mount.split(":")
-                source, path = mount.split(':')
-                subprocess.call(['lxc','config','device','add',machine['name'],{source},'disk',f'source={source}',f'path={path}'])
 
     def terminate(self,machine):
         print("Deleting",machine['name'])
