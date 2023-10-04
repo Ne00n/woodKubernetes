@@ -12,7 +12,7 @@ class LXD(rqlite):
             sub = hostname
         #get local vpn ip
         vpnIP = socket.gethostbyname('rqlite')
-
+        #update host info
         hostMemory = int(psutil.virtual_memory().total / 1e+6)
         while True:
             node = self.query(['SELECT * FROM nodes WHERE name =  ?',hostname])
@@ -33,7 +33,7 @@ class LXD(rqlite):
                 time.sleep(10)
                 continue
             if hostname not in nodes:
-                print("Warning, could not find",hostname,"in rqlite nodes")
+                print(f"Warning, could not find {hostname} in rqlite nodes")
                 time.sleep(10)
                 continue
 
@@ -111,7 +111,7 @@ class LXD(rqlite):
         subprocess.call(["lxc","config","device","override",machine['name'],"root",f"size={machine['storage']}GB"])
         #wait for boot
         for i in range(30):
-            response = subprocess.check_output(['lxc', 'exec', machine['name'],'--','ls']).decode("utf-8")
+            response = subprocess.check_output(['lxc', 'exec', machine['name'],'--','ps ax']).decode("utf-8")
             if response != "Error: Instance is not running": break
             time.sleep(2)
         #update network information
