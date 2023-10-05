@@ -26,14 +26,14 @@ class Wood:
             time.sleep(random.randint(5, 15))
 
     def lxd(self):
-        poolDriver = input("What storage type should be used? (btrfs or lvm): ")
+        poolDriver = input("What storage type should be used? (btrfs, lvm or zfs): ")
         poolType = input("Loop disk or Dedicated partition/disk? (loop or /dev/sda..,): ")
-        poolSize = input(f"How big should the {poolType} storage pool be? min. 5GB (GB): ") if poolType == "loop" else 0
+        if poolType == "loop": poolSize = input(f"How big should the {poolType} storage pool be? min. 5GB (GB): ")
         for name,details in self.servers['servers'].items():
             lxd = "apt-get update && apt-get install lxd -y && /usr/bin/lxd --auto"
             print(name,"Installing LXD")
             if poolType == "loop":
-                self.cmd(details['ip'],f'{lxd} --storage-backend={poolDriver} --storage-create-loop={str(size)}')
+                self.cmd(details['ip'],f'{lxd} --storage-backend={poolDriver} --storage-create-loop={str(poolSize)}')
             else:
                 self.cmd(details['ip'],f'{lxd} --storage-backend={poolDriver} --storage-create-device={poolType}')
 
@@ -82,8 +82,7 @@ class Wood:
     def preload(self):
         print("--- Quick options ---")
         os = ["debian/bullseye/amd64","debian/bullseye/arm64","debian/bookworm/amd64","debian/bookworm/arm64"]
-        for index, entry in enumerate(os):
-            print(index,entry)
+        for index, entry in enumerate(os): print(index,entry)
         template = input("What image should be preloaded? ")
         if template.isnumeric():
             for index, entry in enumerate(os):
